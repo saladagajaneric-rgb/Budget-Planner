@@ -725,19 +725,25 @@
        8. ALLOWANCE BAR & CATEGORY CARDS
        ========================================================= */
     .allowance-bar {
-      display: grid;
-      grid-template-columns: 1.1fr 1fr;
-      gap: 0.9rem;
-      align-items: end;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
       background: var(--surface-subtle);
-      padding: 0.95rem 1.05rem;
+      padding: 1rem 1.1rem;
       border-radius: var(--radius-md);
       border: 1px solid var(--border);
       margin-bottom: 1.1rem;
     }
 
+    .allowance-top-row {
+      display: grid;
+      grid-template-columns: 1.15fr 1fr;
+      gap: 0.9rem;
+      align-items: end;
+    }
+
     @media (max-width: 600px) {
-      .allowance-bar {
+      .allowance-top-row {
         grid-template-columns: 1fr;
       }
     }
@@ -752,6 +758,49 @@
       align-items: center;
       font-size: 0.86rem;
       font-weight: 600;
+    }
+
+    .budget-scope-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      padding-top: 0.65rem;
+      border-top: 1px dashed var(--border-strong);
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+    }
+
+    .scope-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-weight: 600;
+    }
+
+    .scope-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.18rem 0.55rem;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      background: var(--surface-muted);
+      color: var(--text-secondary);
+    }
+
+    .scope-badge.recurring {
+      background: var(--sage-soft);
+      color: var(--sage);
+    }
+
+    .scope-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      flex-wrap: wrap;
     }
 
     .categories-grid {
@@ -1304,14 +1353,14 @@
               <h2 class="section-title">
                 Budgets for <span id="budgetHeaderRange" style="color: var(--primary);"></span>
               </h2>
-              <p class="section-subtitle">Each day, week, or month on the calendar stores its own independent budget</p>
+              <p class="section-subtitle">Starts at ₱0.00 by default — set a budget for just this period or apply it to future ones</p>
             </div>
             <div style="display: flex; gap: 0.45rem; flex-wrap: wrap;">
               <button
                 type="button"
                 class="btn btn-sm"
                 onclick="copyPreviousPeriodBudget()"
-                title="Copy allowance & category budgets from the previous period"
+                title="Copy allowance & category budgets from the immediately preceding period"
               >
                 📋 Copy Previous <span id="copyPrevBtnLabel">Week</span>
               </button>
@@ -1322,20 +1371,58 @@
           </div>
 
           <div class="allowance-bar">
-            <div>
-              <label for="allowanceInput">Total Allowance for <span id="allowancePeriodLabel">this Week</span> (₱)</label>
-              <input
-                id="allowanceInput"
-                type="number"
-                min="0"
-                step="0.01"
-                placeholder="0.00"
-                oninput="handleAllowanceChange(this.value)"
-              />
+            <div class="allowance-top-row">
+              <div>
+                <label for="allowanceInput">Total Allowance for <span id="allowancePeriodLabel">this Week</span> (₱)</label>
+                <input
+                  id="allowanceInput"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  placeholder="0.00"
+                  oninput="handleAllowanceChange(this.value)"
+                />
+              </div>
+              <div class="unassigned-box">
+                <span>Unassigned:</span>
+                <strong id="unassignedAmount">₱0.00</strong>
+              </div>
             </div>
-            <div class="unassigned-box">
-              <span>Unassigned:</span>
-              <strong id="unassignedAmount">₱0.00</strong>
+
+            <div class="budget-scope-bar">
+              <div class="scope-status">
+                <span>Scope:</span>
+                <span id="budgetScopeBadge" class="scope-badge">📌 Only this period (others stay ₱0.00)</span>
+              </div>
+              <div class="scope-actions">
+                <button
+                  type="button"
+                  id="applyFutureBtn"
+                  class="btn btn-sm btn-primary"
+                  onclick="applyCurrentBudgetToFuture()"
+                  title="Make this allowance & category split the default for all future periods from this date onward"
+                >
+                  ⏭️ Apply to Future <span id="applyFutureUnitLabel">Weeks</span>
+                </button>
+                <button
+                  type="button"
+                  id="onlyThisPeriodBtn"
+                  class="btn btn-sm"
+                  style="display: none;"
+                  onclick="stopFutureRecurringBudget()"
+                  title="Keep this budget only on this period so future periods stay at ₱0.00"
+                >
+                  📌 Keep Only on This <span id="onlyThisUnitLabel">Week</span> (Future = ₱0)
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-sm btn-danger"
+                  onclick="clearCurrentPeriodBudgetToZero()"
+                  title="Reset this period's allowance and category budgets to ₱0.00"
+                >
+                  Reset to ₱0
+                </button>
+              </div>
             </div>
           </div>
 
@@ -1551,39 +1638,26 @@
       return {
         allowance: 0,
         categories: cats,
-        groceryList: []
+        groceryList: [],
+        customized: false
       };
     }
 
     function createDefaultState() {
       const today = getTodayISO();
-      const weekBounds = getPeriodBounds("weekly", today);
-      const dayBounds = getPeriodBounds("daily", today);
-      const monthBounds = getPeriodBounds("monthly", today);
-
       return {
         theme: "light",
         periodType: "weekly",
         anchorDate: today,
         titles: { ...DEFAULT_TITLES },
         categories: JSON.parse(JSON.stringify(DEFAULT_CATEGORIES)),
-        // Google-Calendar style: each specific date/week/month key has its own budget & checklist!
-        periodRecords: {
-          [dayBounds.key]: {
-            allowance: 500,
-            categories: { grocery: 300, household: 100, other: 100 },
-            groceryList: []
-          },
-          [weekBounds.key]: {
-            allowance: 3500,
-            categories: { grocery: 2000, household: 800, other: 500 },
-            groceryList: []
-          },
-          [monthBounds.key]: {
-            allowance: 15000,
-            categories: { grocery: 9000, household: 3500, other: 2000 },
-            groceryList: []
-          }
+        // Every day, week, and month starts at ₱0.00 by default until the user sets it!
+        periodRecords: {},
+        // Optional recurring future templates per periodType: { fromISO, allowance, categories }
+        futureDefaults: {
+          daily: null,
+          weekly: null,
+          monthly: null
         },
         expenses: [],
         groceryNotes: JSON.parse(JSON.stringify(DEFAULT_NOTES))
@@ -1595,6 +1669,18 @@
     /* =========================================================
        2. LOCAL STORAGE & SEAMLESS MIGRATION
        ========================================================= */
+    function isOldHardcodedDefault(rec) {
+      if (!rec || !rec.categories) return false;
+      const a = Number(rec.allowance) || 0;
+      const g = Number(rec.categories.grocery) || 0;
+      const h = Number(rec.categories.household) || 0;
+      const o = Number(rec.categories.other) || 0;
+      if (a === 500 && g === 300 && h === 100 && o === 100) return true;
+      if (a === 3500 && g === 2000 && h === 800 && o === 500) return true;
+      if (a === 15000 && g === 9000 && h === 3500 && o === 2000) return true;
+      return false;
+    }
+
     function loadState() {
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
@@ -1612,24 +1698,28 @@
           ? parsed.periodType
           : def.periodType;
 
-        const periodRecords =
+        const rawRecords =
           parsed.periodRecords && typeof parsed.periodRecords === "object"
             ? parsed.periodRecords
             : {};
 
-        // Migrate legacy global budgets if upgrading from older version
-        if (!parsed.periodRecords && parsed.budgets) {
-          ["daily", "weekly", "monthly"].forEach((pType) => {
-            const b = getPeriodBounds(pType, anchorDate);
-            if (parsed.budgets[pType]) {
-              periodRecords[b.key] = {
-                allowance: Number(parsed.budgets[pType].allowance) || 0,
-                categories: { ...(parsed.budgets[pType].categories || {}) },
-                groceryList: pType === periodType && Array.isArray(parsed.groceryList) ? parsed.groceryList : []
-              };
-            }
-          });
-        }
+        // Strip out old auto-populated 500 / 3500 / 15000 defaults so unconfigured periods are 0
+        const periodRecords = {};
+        Object.entries(rawRecords).forEach(([k, rec]) => {
+          if (isOldHardcodedDefault(rec) && (!rec.groceryList || rec.groceryList.length === 0)) {
+            return;
+          }
+          periodRecords[k] = {
+            ...rec,
+            customized: rec.customized !== undefined ? Boolean(rec.customized) : true
+          };
+        });
+
+        const futureDefaults = {
+          daily: parsed.futureDefaults?.daily || null,
+          weekly: parsed.futureDefaults?.weekly || null,
+          monthly: parsed.futureDefaults?.monthly || null
+        };
 
         return {
           theme: parsed.theme === "dark" ? "dark" : "light",
@@ -1638,6 +1728,7 @@
           titles: { ...def.titles, ...(parsed.titles || {}) },
           categories,
           periodRecords,
+          futureDefaults,
           expenses: Array.isArray(parsed.expenses) ? parsed.expenses : [],
           groceryNotes: Array.isArray(parsed.groceryNotes) ? parsed.groceryNotes : def.groceryNotes
         };
@@ -1646,18 +1737,37 @@
       }
     }
 
+    function getPeriodRecordForBounds(periodType, bounds) {
+      let rec = state.periodRecords[bounds.key];
+      const fut = state.futureDefaults?.[periodType];
+      const inheritsFuture = Boolean(fut && bounds.startISO >= fut.fromISO);
+
+      if (!rec) {
+        rec = createEmptyPeriodRecord(state.categories);
+        state.periodRecords[bounds.key] = rec;
+      }
+
+      if (!rec.categories) rec.categories = {};
+      if (!Array.isArray(rec.groceryList)) rec.groceryList = [];
+
+      // If this specific period hasn't been manually customized yet, check if a Future Default applies
+      if (!rec.customized && inheritsFuture) {
+        rec.allowance = Number(fut.allowance) || 0;
+        state.categories.forEach((c) => {
+          rec.categories[c.id] = Number(fut.categories?.[c.id]) || 0;
+        });
+      } else {
+        state.categories.forEach((c) => {
+          if (rec.categories[c.id] === undefined) rec.categories[c.id] = 0;
+        });
+      }
+
+      return { bounds, rec, inheritsFuture };
+    }
+
     function getActivePeriodRecord() {
       const bounds = getPeriodBounds(state.periodType, state.anchorDate);
-      if (!state.periodRecords[bounds.key]) {
-        state.periodRecords[bounds.key] = createEmptyPeriodRecord(state.categories);
-      }
-      const rec = state.periodRecords[bounds.key];
-      if (!rec.categories) rec.categories = {};
-      state.categories.forEach((c) => {
-        if (rec.categories[c.id] === undefined) rec.categories[c.id] = 0;
-      });
-      if (!Array.isArray(rec.groceryList)) rec.groceryList = [];
-      return { bounds, rec };
+      return getPeriodRecordForBounds(state.periodType, bounds);
     }
 
     function saveState(toastMsg) {
@@ -1726,6 +1836,11 @@
       state.categories.push({ id, name: newName });
       Object.values(state.periodRecords).forEach((rec) => {
         if (rec.categories) rec.categories[id] = 0;
+      });
+      ["daily", "weekly", "monthly"].forEach((p) => {
+        if (state.futureDefaults?.[p]?.categories) {
+          state.futureDefaults[p].categories[id] = 0;
+        }
       });
       saveState("Added new category");
       renderAll();
@@ -1805,7 +1920,8 @@
         d.setMonth(d.getMonth() + direction);
       }
       state.anchorDate = formatDateISO(d);
-      saveState("Moved to " + formatPeriodRangeLabel(state.periodType, getPeriodBounds(state.periodType, state.anchorDate).startDate, getPeriodBounds(state.periodType, state.anchorDate).endDate));
+      const b = getPeriodBounds(state.periodType, state.anchorDate);
+      saveState("Viewing " + formatPeriodRangeLabel(state.periodType, b.startDate, b.endDate));
       syncDefaultExpenseDate();
       renderAll();
     }
@@ -1841,7 +1957,7 @@
         prevDate.setMonth(prevDate.getMonth() - 1);
       }
       const prevBounds = getPeriodBounds(state.periodType, formatDateISO(prevDate));
-      const prevRec = state.periodRecords[prevBounds.key];
+      const { rec: prevRec } = getPeriodRecordForBounds(state.periodType, prevBounds);
 
       if (!prevRec || (prevRec.allowance === 0 && Object.values(prevRec.categories || {}).every((v) => !v))) {
         alert("No budget was recorded in the immediately preceding period to copy from.");
@@ -1853,18 +1969,20 @@
       state.categories.forEach((c) => {
         rec.categories[c.id] = Number(prevRec.categories?.[c.id]) || 0;
       });
+      rec.customized = true;
 
-      saveState("Copied budget from previous period");
+      saveState("Copied budget to this period only");
       renderAll();
     }
 
     /* =========================================================
-       5. ALLOWANCE & CATEGORY BUDGET HANDLERS (Per Calendar Period!)
+       5. ALLOWANCE & FUTURE vs SINGLE-PERIOD SCOPE HANDLERS
        ========================================================= */
     function handleAllowanceChange(val) {
       const num = Math.max(0, parseFloat(val) || 0);
       const { rec } = getActivePeriodRecord();
       rec.allowance = num;
+      rec.customized = true;
       saveState("Allowance saved for this period");
       renderSummaryAndCategories(false);
       renderCalendarPopover();
@@ -1874,9 +1992,80 @@
       const num = Math.max(0, parseFloat(val) || 0);
       const { rec } = getActivePeriodRecord();
       rec.categories[catId] = num;
+      rec.customized = true;
       saveState("Category budget saved for this period");
       renderSummaryAndCategories(false);
       renderCalendarPopover();
+    }
+
+    function applyCurrentBudgetToFuture() {
+      const { bounds, rec } = getActivePeriodRecord();
+      const catCopy = {};
+      state.categories.forEach((c) => {
+        catCopy[c.id] = Number(rec.categories[c.id]) || 0;
+      });
+
+      state.futureDefaults[state.periodType] = {
+        fromISO: bounds.startISO,
+        allowance: Number(rec.allowance) || 0,
+        categories: catCopy
+      };
+
+      // Update any future uncustomized or matching records from this date forward
+      Object.entries(state.periodRecords).forEach(([key, r]) => {
+        if (key.startsWith(state.periodType + "_")) {
+          const recStartISO = key.slice(state.periodType.length + 1);
+          if (recStartISO >= bounds.startISO) {
+            r.allowance = Number(rec.allowance) || 0;
+            state.categories.forEach((c) => {
+              r.categories[c.id] = catCopy[c.id];
+            });
+            r.customized = false;
+          }
+        }
+      });
+
+      const pluralUnit = state.periodType === "daily" ? "days" : state.periodType === "weekly" ? "weeks" : "months";
+      saveState(`Applied budget to all future ${pluralUnit} from ${bounds.startISO} onward`);
+      renderAll();
+    }
+
+    function stopFutureRecurringBudget() {
+      const { bounds, rec } = getActivePeriodRecord();
+      // Keep the current period's numbers strictly on this period
+      const currentAllowance = Number(rec.allowance) || 0;
+      const currentCats = { ...rec.categories };
+
+      state.futureDefaults[state.periodType] = null;
+
+      // Clear any other periods that were only inheriting the future default (not manually customized)
+      Object.entries(state.periodRecords).forEach(([key, r]) => {
+        if (key.startsWith(state.periodType + "_") && key !== bounds.key && !r.customized) {
+          r.allowance = 0;
+          state.categories.forEach((c) => {
+            r.categories[c.id] = 0;
+          });
+        }
+      });
+
+      rec.allowance = currentAllowance;
+      rec.categories = currentCats;
+      rec.customized = true;
+
+      const pluralUnit = state.periodType === "daily" ? "days" : state.periodType === "weekly" ? "weeks" : "months";
+      saveState(`Kept budget on this period only — future ${pluralUnit} reset to ₱0.00`);
+      renderAll();
+    }
+
+    function clearCurrentPeriodBudgetToZero() {
+      const { rec } = getActivePeriodRecord();
+      rec.allowance = 0;
+      state.categories.forEach((c) => {
+        rec.categories[c.id] = 0;
+      });
+      rec.customized = true;
+      saveState("Reset this period's budget to ₱0.00");
+      renderAll();
     }
 
     /* =========================================================
@@ -2187,6 +2376,7 @@
       const rangeText = formatPeriodRangeLabel(state.periodType, bounds.startDate, bounds.endDate);
       const capPeriod = state.periodType === "daily" ? "Daily" : state.periodType === "weekly" ? "Weekly" : "Monthly";
       const unitNoun = state.periodType === "daily" ? "Day" : state.periodType === "weekly" ? "Week" : "Month";
+      const unitPlural = state.periodType === "daily" ? "Days" : state.periodType === "weekly" ? "Weeks" : "Months";
 
       document.getElementById("summaryPeriodName").textContent = capPeriod;
       document.getElementById("summaryRangeShort").textContent = rangeText;
@@ -2196,6 +2386,35 @@
       document.getElementById("warningPeriodLabel").textContent = rangeText;
       document.getElementById("allowancePeriodLabel").textContent = rangeText;
       document.getElementById("copyPrevBtnLabel").textContent = unitNoun;
+
+      const applyFutureUnitEl = document.getElementById("applyFutureUnitLabel");
+      const onlyThisUnitEl = document.getElementById("onlyThisUnitLabel");
+      const scopeBadgeEl = document.getElementById("budgetScopeBadge");
+      const onlyThisBtnEl = document.getElementById("onlyThisPeriodBtn");
+      if (applyFutureUnitEl) applyFutureUnitEl.textContent = unitPlural;
+      if (onlyThisUnitEl) onlyThisUnitEl.textContent = unitNoun;
+
+      const fDef = state.futureDefaults && state.futureDefaults[state.periodType];
+      const isFutureActiveHere = fDef && bounds.startISO >= fDef.fromISO && !periodBudget.customized;
+      const hasAnyBudgetHere =
+        (Number(periodBudget.allowance) || 0) > 0 ||
+        Object.values(periodBudget.categories || {}).some((v) => (Number(v) || 0) > 0);
+
+      if (scopeBadgeEl) {
+        if (isFutureActiveHere) {
+          scopeBadgeEl.className = "scope-badge is-future";
+          scopeBadgeEl.textContent = `⏭️ Auto-filling Future ${unitPlural} (${formatPHP(fDef.allowance)})`;
+        } else if (hasAnyBudgetHere) {
+          scopeBadgeEl.className = "scope-badge is-single";
+          scopeBadgeEl.textContent = `📌 Only This ${unitNoun} (Other ${unitPlural.toLowerCase()} stay ₱0.00)`;
+        } else {
+          scopeBadgeEl.className = "scope-badge";
+          scopeBadgeEl.textContent = `₱0.00 Default (Unset ${unitNoun})`;
+        }
+      }
+      if (onlyThisBtnEl) {
+        onlyThisBtnEl.style.display = fDef ? "inline-flex" : "none";
+      }
 
       const allowanceInput = document.getElementById("allowanceInput");
       if (document.activeElement !== allowanceInput) {
@@ -2604,9 +2823,17 @@
     function doesDateHaveBudget(isoDate) {
       const b = getPeriodBounds(state.periodType, isoDate);
       const rec = state.periodRecords[b.key];
-      if (!rec) return false;
-      if ((Number(rec.allowance) || 0) > 0) return true;
-      return Object.values(rec.categories || {}).some((v) => (Number(v) || 0) > 0);
+      if (rec) {
+        if ((Number(rec.allowance) || 0) > 0) return true;
+        if (Object.values(rec.categories || {}).some((v) => (Number(v) || 0) > 0)) return true;
+        if (rec.customized) return false;
+      }
+      const fDef = state.futureDefaults && state.futureDefaults[state.periodType];
+      if (fDef && b.startISO >= fDef.fromISO) {
+        if ((Number(fDef.allowance) || 0) > 0) return true;
+        return Object.values(fDef.categories || {}).some((v) => (Number(v) || 0) > 0);
+      }
+      return false;
     }
 
     function renderCalendarPopover() {
