@@ -127,7 +127,7 @@
       flex-direction: column;
       gap: 1rem;
       position: relative;
-      overflow: hidden;
+      z-index: 30;
     }
 
     header::before {
@@ -137,6 +137,7 @@
       left: 0;
       right: 0;
       height: 5px;
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
       background: linear-gradient(90deg, var(--primary), var(--sage), var(--yellow));
     }
 
@@ -157,29 +158,30 @@
     }
 
     .app-title-input {
-      font-family: "Georgia", "Palatino Linotype", serif;
-      font-size: 1.6rem;
-      font-weight: 700;
-      color: var(--text);
-      border: 1px dashed transparent;
-      border-radius: 8px;
-      padding: 0.1rem 0.4rem;
-      margin: -0.1rem -0.4rem;
-      background: transparent;
+      font-family: "Georgia", "Palatino Linotype", serif !important;
+      font-size: 1.6rem !important;
+      font-weight: 700 !important;
+      color: var(--text) !important;
+      border: 1px dashed transparent !important;
+      border-radius: 8px !important;
+      padding: 0.1rem 0.4rem !important;
+      margin: -0.1rem -0.4rem !important;
+      background: transparent !important;
+      box-shadow: none !important;
       width: 100%;
       max-width: 520px;
       transition: all 0.18s ease;
     }
 
     .app-title-input:hover {
-      border-color: var(--border-strong);
-      background: var(--surface-soft);
+      border-color: var(--border-strong) !important;
+      background: var(--surface-soft) !important;
     }
 
     .app-title-input:focus {
-      outline: none;
-      border-color: var(--primary);
-      background: var(--surface);
+      outline: none !important;
+      border-color: var(--primary) !important;
+      background: var(--surface) !important;
     }
 
     .app-subtitle {
@@ -229,26 +231,179 @@
       align-items: center;
       justify-content: space-between;
       background: var(--surface-soft);
-      padding: 0.65rem 0.95rem;
+      padding: 0.6rem 0.95rem;
       border-radius: var(--radius-md);
       border: 1px solid var(--border);
       gap: 0.5rem;
+      position: relative;
     }
 
     .period-nav-center {
       display: flex;
       align-items: center;
-      gap: 0.65rem;
+      gap: 0.6rem;
       flex-wrap: wrap;
       justify-content: center;
       text-align: center;
+      position: relative;
+    }
+
+    .date-trigger-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border-strong);
+      padding: 0.42rem 0.95rem;
+      border-radius: 999px;
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.16s ease;
+      color: var(--text);
+    }
+
+    .date-trigger-btn:hover {
+      border-color: var(--primary);
+      background: var(--primary-soft);
+      transform: translateY(-1px);
     }
 
     .period-label {
       font-family: "Georgia", serif;
-      font-size: 1.1rem;
+      font-size: 1.06rem;
       font-weight: 700;
       color: var(--text);
+    }
+
+    .date-caret {
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+    }
+
+    /* Interactive Calendar Popover */
+    .calendar-popover {
+      display: none;
+      position: absolute;
+      top: calc(100% + 0.6rem);
+      left: 50%;
+      transform: translateX(-50%);
+      width: 320px;
+      background: var(--surface);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      box-shadow: 0 14px 34px rgba(51, 38, 29, 0.18);
+      z-index: 100;
+      text-align: left;
+    }
+
+    .calendar-popover.open {
+      display: block;
+    }
+
+    .cal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+      gap: 0.35rem;
+    }
+
+    .cal-month-title {
+      font-family: "Georgia", serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .cal-weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      text-align: center;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 0.35rem;
+    }
+
+    .cal-days-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 3px;
+    }
+
+    .cal-day {
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--text);
+      height: 36px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      transition: all 0.12s ease;
+    }
+
+    .cal-day:hover {
+      background: var(--surface-warm);
+      border-color: var(--border-strong);
+    }
+
+    .cal-day.outside {
+      color: var(--text-muted);
+      opacity: 0.45;
+    }
+
+    .cal-day.in-period {
+      background: var(--primary-soft);
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .cal-day.is-anchor {
+      background: var(--primary);
+      color: #ffffff;
+      font-weight: 800;
+    }
+
+    .cal-day.is-today {
+      border-color: var(--sage);
+    }
+
+    .cal-expense-dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--sage);
+      position: absolute;
+      bottom: 3px;
+    }
+
+    .cal-day.is-anchor .cal-expense-dot {
+      background: #ffffff;
+    }
+
+    .cal-footer {
+      margin-top: 0.85rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+
+    .cal-footer input[type="date"] {
+      padding: 0.32rem 0.5rem;
+      font-size: 0.82rem;
+      width: auto;
+      flex: 1;
     }
 
     /* =========================================================
@@ -1016,9 +1171,42 @@
 
       <div class="period-nav">
         <button type="button" class="btn btn-sm" onclick="shiftPeriod(-1)" aria-label="Previous period">&larr; Previous</button>
-        <div class="period-nav-center">
-          <span id="periodDateRange" class="period-label"></span>
+        <div class="period-nav-center" id="datePickerWrapper">
+          <button
+            type="button"
+            class="date-trigger-btn"
+            onclick="toggleCalendarPopover(event)"
+            title="Click to open calendar and pick a specific date"
+          >
+            <span>📅</span>
+            <span id="periodDateRange" class="period-label"></span>
+            <span class="date-caret">▾</span>
+          </button>
           <button type="button" class="btn btn-sm" onclick="resetToToday()">Today</button>
+
+          <!-- Interactive Calendar Popover -->
+          <div id="calendarPopover" class="calendar-popover" onclick="event.stopPropagation()">
+            <div class="cal-header">
+              <button type="button" class="btn btn-sm" onclick="shiftCalendarViewMonth(-1)" aria-label="Previous month">&lsaquo;</button>
+              <span id="calMonthYearTitle" class="cal-month-title">October 2026</span>
+              <button type="button" class="btn btn-sm" onclick="shiftCalendarViewMonth(1)" aria-label="Next month">&rsaquo;</button>
+            </div>
+            <div class="cal-weekdays">
+              <span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span><span>Su</span>
+            </div>
+            <div id="calDaysGrid" class="cal-days-grid"></div>
+            <div class="cal-footer">
+              <input
+                type="date"
+                id="directDateJumpInput"
+                onchange="selectSpecificDate(this.value)"
+                title="Jump to exact date"
+              />
+              <button type="button" class="btn btn-sm btn-sage" onclick="resetToToday(); closeCalendarPopover();">
+                Today
+              </button>
+            </div>
+          </div>
         </div>
         <button type="button" class="btn btn-sm" onclick="shiftPeriod(1)" aria-label="Next period">Next &rarr;</button>
       </div>
@@ -2223,6 +2411,115 @@
         .replace(/"/g, "&quot;");
     }
 
+    let calViewYear = parseDateISO(state.anchorDate).getFullYear();
+    let calViewMonth = parseDateISO(state.anchorDate).getMonth();
+
+    function toggleCalendarPopover(event) {
+      if (event) event.stopPropagation();
+      const pop = document.getElementById("calendarPopover");
+      if (!pop) return;
+      const isOpen = pop.classList.contains("open");
+      if (!isOpen) {
+        const anchor = parseDateISO(state.anchorDate);
+        calViewYear = anchor.getFullYear();
+        calViewMonth = anchor.getMonth();
+        renderCalendarPopover();
+        pop.classList.add("open");
+      } else {
+        pop.classList.remove("open");
+      }
+    }
+
+    function closeCalendarPopover() {
+      const pop = document.getElementById("calendarPopover");
+      if (pop) pop.classList.remove("open");
+    }
+
+    function shiftCalendarViewMonth(delta) {
+      const d = new Date(calViewYear, calViewMonth + delta, 1);
+      calViewYear = d.getFullYear();
+      calViewMonth = d.getMonth();
+      renderCalendarPopover();
+    }
+
+    function selectSpecificDate(isoDate) {
+      if (!isoDate) return;
+      state.anchorDate = isoDate;
+      const d = parseDateISO(isoDate);
+      calViewYear = d.getFullYear();
+      calViewMonth = d.getMonth();
+      saveState("Date selected");
+      syncDefaultExpenseDate();
+      closeCalendarPopover();
+      renderAll();
+    }
+
+    function renderCalendarPopover() {
+      const titleEl = document.getElementById("calMonthYearTitle");
+      const gridEl = document.getElementById("calDaysGrid");
+      const directInput = document.getElementById("directDateJumpInput");
+      if (!titleEl || !gridEl) return;
+
+      const viewDate = new Date(calViewYear, calViewMonth, 1);
+      titleEl.textContent = viewDate.toLocaleDateString("en-US", {
+        month: "long",
+        year: "numeric"
+      });
+
+      if (directInput) {
+        directInput.value = state.anchorDate;
+      }
+
+      const bounds = getPeriodBounds(state.periodType, state.anchorDate);
+      const todayISO = getTodayISO();
+      const expenseDates = new Set(state.expenses.map((e) => e.date));
+
+      // First day of month (Monday-start grid: Mon=0 .. Sun=6)
+      const firstDayWeekIdx = (viewDate.getDay() + 6) % 7;
+      const startCellDate = new Date(calViewYear, calViewMonth, 1 - firstDayWeekIdx);
+
+      const cells = [];
+      for (let i = 0; i < 42; i++) {
+        const cellDate = new Date(startCellDate);
+        cellDate.setDate(startCellDate.getDate() + i);
+        const iso = formatDateISO(cellDate);
+        const isCurrentMonth = cellDate.getMonth() === calViewMonth;
+        const isInPeriod = iso >= bounds.startISO && iso <= bounds.endISO;
+        const isAnchor = iso === state.anchorDate;
+        const isToday = iso === todayISO;
+        const hasExpense = expenseDates.has(iso);
+
+        const classes = ["cal-day"];
+        if (!isCurrentMonth) classes.push("outside");
+        if (isInPeriod) classes.push("in-period");
+        if (isAnchor) classes.push("is-anchor");
+        if (isToday) classes.push("is-today");
+
+        cells.push(`
+          <button
+            type="button"
+            class="${classes.join(" ")}"
+            onclick="selectSpecificDate('${iso}')"
+            title="${iso}"
+          >
+            <span>${cellDate.getDate()}</span>
+            ${hasExpense ? `<span class="cal-expense-dot"></span>` : ""}
+          </button>
+        `);
+      }
+
+      gridEl.innerHTML = cells.join("");
+    }
+
+    if (typeof document !== "undefined" && document.addEventListener) {
+      document.addEventListener("click", (e) => {
+        const wrapper = document.getElementById("datePickerWrapper");
+        if (wrapper && !wrapper.contains(e.target)) {
+          closeCalendarPopover();
+        }
+      });
+    }
+
     function renderHeaderPeriod() {
       const bounds = getPeriodBounds(state.periodType, state.anchorDate);
       document.getElementById("periodDateRange").textContent = formatPeriodRangeLabel(
@@ -2234,6 +2531,8 @@
       document.querySelectorAll(".period-tab").forEach((btn) => {
         btn.classList.toggle("active", btn.dataset.period === state.periodType);
       });
+
+      renderCalendarPopover();
     }
 
     function renderAll() {
