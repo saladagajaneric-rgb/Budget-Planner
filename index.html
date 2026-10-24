@@ -105,11 +105,6 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    .serif-heading {
-      font-family: "Georgia", "Palatino Linotype", "Book Antiqua", serif;
-      letter-spacing: -0.01em;
-    }
-
     .container {
       max-width: 1100px;
       margin: 0 auto;
@@ -117,30 +112,6 @@
       display: flex;
       flex-direction: column;
       gap: 1.35rem;
-    }
-
-    /* Inline Editable Titles */
-    .editable-title {
-      border: 1px dashed transparent;
-      border-radius: 8px;
-      padding: 0.12rem 0.45rem;
-      margin: -0.12rem -0.45rem;
-      background: transparent;
-      color: inherit;
-      font: inherit;
-      cursor: text;
-      transition: all 0.18s ease;
-    }
-
-    .editable-title:hover {
-      border-color: var(--border-strong);
-      background: var(--surface-soft);
-    }
-
-    .editable-title:focus {
-      outline: 2px solid var(--primary);
-      border-color: transparent;
-      background: var(--surface);
     }
 
     /* =========================================================
@@ -173,30 +144,47 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
-      align-items: flex-start;
+      align-items: center;
       gap: 1rem;
     }
 
     .brand-area {
       display: flex;
       flex-direction: column;
-      gap: 0.25rem;
+      gap: 0.2rem;
       flex: 1;
-      min-width: 250px;
+      min-width: 240px;
     }
 
     .app-title-input {
       font-family: "Georgia", "Palatino Linotype", serif;
-      font-size: 1.65rem;
+      font-size: 1.6rem;
       font-weight: 700;
       color: var(--text);
+      border: 1px dashed transparent;
+      border-radius: 8px;
+      padding: 0.1rem 0.4rem;
+      margin: -0.1rem -0.4rem;
+      background: transparent;
       width: 100%;
+      max-width: 520px;
+      transition: all 0.18s ease;
     }
 
-    .app-subtitle-input {
+    .app-title-input:hover {
+      border-color: var(--border-strong);
+      background: var(--surface-soft);
+    }
+
+    .app-title-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      background: var(--surface);
+    }
+
+    .app-subtitle {
       font-size: 0.9rem;
       color: var(--text-secondary);
-      width: 100%;
     }
 
     .header-controls {
@@ -318,14 +306,11 @@
       border-bottom: 1px solid var(--surface-warm);
     }
 
-    .section-title-group {
-      display: flex;
-      align-items: center;
-      gap: 0.45rem;
-      flex-wrap: wrap;
+    .section-title {
       font-family: "Georgia", serif;
       font-size: 1.25rem;
       font-weight: 700;
+      color: var(--text);
     }
 
     .pill-hint {
@@ -459,21 +444,16 @@
       border-color: var(--red-border);
     }
 
-    .stat-label-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 0.4rem;
-    }
-
-    .stat-label-input {
+    .stat-label {
       font-size: 0.78rem;
       font-weight: 700;
       color: var(--text-secondary);
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      width: auto;
-      max-width: 190px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.4rem;
     }
 
     .stat-value {
@@ -497,10 +477,6 @@
 
     .text-green {
       color: var(--green) !important;
-    }
-
-    .text-sage {
-      color: var(--sage) !important;
     }
 
     .badge-over {
@@ -558,7 +534,7 @@
       flex-direction: column;
       gap: 0.85rem;
       box-shadow: var(--shadow-sm);
-      transition: transform 0.15s ease, border-color 0.2s ease;
+      transition: border-color 0.2s ease;
     }
 
     .category-card:hover {
@@ -580,14 +556,25 @@
     .category-name-input {
       font-family: "Georgia", serif;
       font-weight: 700;
-      font-size: 1.1rem;
+      font-size: 1.08rem;
       flex: 1;
       min-width: 120px;
-      border: 1px dashed var(--border-strong) !important;
-      background: var(--surface) !important;
-      padding: 0.32rem 0.6rem !important;
+      border: 1px dashed transparent !important;
+      background: transparent !important;
+      padding: 0.25rem 0.5rem !important;
+      margin-left: -0.5rem;
       border-radius: 8px !important;
       color: var(--text);
+    }
+
+    .category-name-input:hover {
+      border-color: var(--border-strong) !important;
+      background: var(--surface) !important;
+    }
+
+    .category-name-input:focus {
+      border-color: var(--primary) !important;
+      background: var(--surface) !important;
     }
 
     .cat-actions-right {
@@ -811,7 +798,6 @@
       display: flex;
       flex-direction: column;
       gap: 0.45rem;
-      transition: transform 0.15s ease;
     }
 
     .note-color-cream { background-color: var(--note-cream); }
@@ -1008,19 +994,12 @@
           <input
             id="titleApp"
             type="text"
-            class="editable-title app-title-input"
-            value="🏡 Our Home Budget &amp; Grocery Companion"
-            title="Click to customize title"
+            class="app-title-input"
+            value="🏡 Home Budget &amp; Grocery Planner"
+            title="Click to personalize your planner name"
             oninput="handleTitleChange('appTitle', this.value)"
           />
-          <input
-            id="titleSubtitle"
-            type="text"
-            class="editable-title app-subtitle-input"
-            value="✨ Mindful spending, kitchen notes &amp; household allowance tracker"
-            title="Click to customize subtitle"
-            oninput="handleTitleChange('appSubtitle', this.value)"
-          />
+          <p class="app-subtitle">Mindful household allowance, category budgets &amp; market notes</p>
         </div>
 
         <div class="header-controls">
@@ -1058,63 +1037,29 @@
          ======================================================= -->
     <section class="card" aria-label="Overall Budget Summary">
       <div class="section-header">
-        <div class="section-title-group">
-          <input
-            id="titleSummarySection"
-            type="text"
-            class="editable-title"
-            style="width: 185px;"
-            value="Overall Summary"
-            title="Click to rename section"
-            oninput="handleTitleChange('summarySection', this.value)"
-          />
-          <span>(<span id="summaryPeriodName">Weekly</span>)</span>
-        </div>
-        <span class="pill-hint">✏️ Click any heading or category name to customize</span>
+        <h2 class="section-title">Overall Summary (<span id="summaryPeriodName">Weekly</span>)</h2>
       </div>
 
       <div class="summary-grid">
         <div class="stat-box">
-          <div class="stat-label-row">
-            <input
-              id="titleAllowanceBox"
-              type="text"
-              class="editable-title stat-label-input"
-              value="Total Allowance"
-              oninput="handleTitleChange('allowanceBox', this.value)"
-            />
-          </div>
+          <div class="stat-label">Total Allowance</div>
           <div id="sumAllowance" class="stat-value">₱0.00</div>
           <div id="sumUnassignedSub" class="stat-sub">Unassigned: ₱0.00</div>
         </div>
 
         <div class="stat-box">
-          <div class="stat-label-row">
-            <input
-              id="titleSpentBox"
-              type="text"
-              class="editable-title stat-label-input"
-              value="Total Spent"
-              oninput="handleTitleChange('spentBox', this.value)"
-            />
-          </div>
+          <div class="stat-label">Total Spent</div>
           <div id="sumSpent" class="stat-value">₱0.00</div>
-          <div id="sumCartSub" class="stat-sub">Est. Grocery List Cart: ₱0.00</div>
+          <div id="sumCartSub" class="stat-sub">Unchecked Grocery Cart: ₱0.00</div>
         </div>
 
         <div id="sumRemainingBox" class="stat-box">
-          <div class="stat-label-row">
-            <input
-              id="titleRemainingBox"
-              type="text"
-              class="editable-title stat-label-input"
-              value="Total Remaining"
-              oninput="handleTitleChange('remainingBox', this.value)"
-            />
+          <div class="stat-label">
+            <span>Total Remaining</span>
             <span id="sumOverBadge" class="badge-over" style="display: none;">Over budget</span>
           </div>
           <div id="sumRemaining" class="stat-value">₱0.00</div>
-          <div id="sumProjectedSub" class="stat-sub">After Unchecked Cart: ₱0.00</div>
+          <div id="sumProjectedSub" class="stat-sub">Remaining After Cart: ₱0.00</div>
         </div>
       </div>
     </section>
@@ -1124,17 +1069,7 @@
          ======================================================= -->
     <section class="card" aria-label="Allowance and Category Budgets">
       <div class="section-header">
-        <div class="section-title-group">
-          <input
-            id="titleBudgetSection"
-            type="text"
-            class="editable-title"
-            style="min-width: 270px;"
-            value="Allowance &amp; Category Budgets"
-            title="Click to rename section"
-            oninput="handleTitleChange('budgetSection', this.value)"
-          />
-        </div>
+        <h2 class="section-title">Allowance &amp; Category Budgets</h2>
         <button type="button" class="btn btn-sm btn-sage" onclick="addNewCategory()">
           + Add Category
         </button>
@@ -1166,17 +1101,7 @@
          ======================================================= -->
     <section class="card" aria-label="Grocery Checklist and Notes">
       <div class="section-header">
-        <div class="section-title-group">
-          <input
-            id="titleGrocerySection"
-            type="text"
-            class="editable-title"
-            style="min-width: 260px;"
-            value="🧺 Grocery Checklist &amp; Notes"
-            title="Click to rename section"
-            oninput="handleTitleChange('grocerySection', this.value)"
-          />
-        </div>
+        <h2 class="section-title">🧺 Grocery Checklist &amp; Notes</h2>
         <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
           <button type="button" class="btn btn-sm btn-sage" onclick="logCheckedGroceriesAsExpenses()" title="Add checked items with prices to your Expense list">
             ✓ Log Checked to Expenses
@@ -1240,17 +1165,7 @@
          ======================================================= -->
     <section class="card" aria-label="Expense Tracking">
       <div class="section-header">
-        <div class="section-title-group">
-          <input
-            id="titleExpenseSection"
-            type="text"
-            class="editable-title"
-            style="min-width: 250px;"
-            value="Expenses for Selected Period"
-            title="Click to rename section"
-            oninput="handleTitleChange('expenseSection', this.value)"
-          />
-        </div>
+        <h2 class="section-title">Expenses for Selected Period</h2>
         <span id="expenseCountLabel" class="pill-hint">0 items</span>
       </div>
 
@@ -1286,9 +1201,7 @@
          ======================================================= -->
     <section class="card" aria-label="Data and Storage">
       <div class="section-header" style="margin-bottom: 0.85rem; border-bottom: none; padding-bottom: 0;">
-        <div class="section-title-group">
-          <span>Data &amp; Backup</span>
-        </div>
+        <h2 class="section-title">Data &amp; Backup</h2>
       </div>
       <div class="data-actions">
         <button type="button" class="btn" onclick="exportDataJson()">⬇ Export to JSON</button>
@@ -1315,15 +1228,7 @@
     ];
 
     const DEFAULT_TITLES = {
-      appTitle: "🏡 Our Home Budget & Grocery Companion",
-      appSubtitle: "✨ Mindful spending, kitchen notes & household allowance tracker",
-      summarySection: "Overall Summary",
-      allowanceBox: "Total Allowance",
-      spentBox: "Total Spent",
-      remainingBox: "Total Remaining",
-      budgetSection: "Allowance & Category Budgets",
-      grocerySection: "🧺 Grocery Checklist & Notes",
-      expenseSection: "Expenses for Selected Period"
+      appTitle: "🏡 Home Budget & Grocery Planner"
     };
 
     const DEFAULT_NOTES = [
@@ -1370,7 +1275,7 @@
           monthly: { allowance: 15000, categories: { grocery: 9000, household: 3500, other: 2000 } }
         },
         expenses: [],
-        groceryList: [], // [{ id, text, qty, estPrice, checked }]
+        groceryList: [],
         groceryNotes: JSON.parse(JSON.stringify(DEFAULT_NOTES))
       };
     }
@@ -1458,7 +1363,7 @@
     }
 
     /* =========================================================
-       3. THEME & CUSTOMIZATION HANDLERS (Titles & Categories)
+       3. THEME & CUSTOMIZATION HANDLERS (App Title & Categories)
        ========================================================= */
     function applyTheme() {
       if (document.documentElement) {
@@ -1478,27 +1383,14 @@
 
     function handleTitleChange(key, value) {
       state.titles[key] = value;
-      saveState("Heading saved");
+      saveState("Planner title saved");
     }
 
     function renderCustomTitles() {
-      const map = {
-        titleApp: "appTitle",
-        titleSubtitle: "appSubtitle",
-        titleSummarySection: "summarySection",
-        titleAllowanceBox: "allowanceBox",
-        titleSpentBox: "spentBox",
-        titleRemainingBox: "remainingBox",
-        titleBudgetSection: "budgetSection",
-        titleGrocerySection: "grocerySection",
-        titleExpenseSection: "expenseSection"
-      };
-      Object.entries(map).forEach(([elId, key]) => {
-        const el = document.getElementById(elId);
-        if (el && document.activeElement !== el) {
-          el.value = state.titles[key] ?? DEFAULT_TITLES[key];
-        }
-      });
+      const appTitleEl = document.getElementById("titleApp");
+      if (appTitleEl && document.activeElement !== appTitleEl) {
+        appTitleEl.value = state.titles.appTitle ?? DEFAULT_TITLES.appTitle;
+      }
     }
 
     function handleCategoryNameChange(catId, newName) {
@@ -1821,7 +1713,6 @@
         });
       });
 
-      // Remove those logged items from checklist
       const loggedIds = new Set(checkedWithPrice.map((i) => i.id));
       state.groceryList = state.groceryList.filter((g) => !loggedIds.has(g.id));
 
