@@ -6,54 +6,58 @@
   <title>Meal &amp; Budget Planner</title>
   <style>
     /* =========================================================
-       1. THEME VARIABLES (Light & Dark Mode via Device Setting)
+       1. WARM, LIGHT & HOMEY THEME (Default Light + Optional Cozy Dark)
        ========================================================= */
     :root {
-      --bg: #f6f8fa;
-      --surface: #ffffff;
-      --surface-alt: #f0f3f6;
-      --border: #d8dee4;
-      --text: #1f2328;
-      --text-muted: #59636e;
-      --primary: #0f766e;
-      --primary-hover: #115e59;
-      --primary-soft: #ccfbf1;
-      --green: #15803d;
-      --green-bg: #dcfce7;
-      --yellow: #b45309;
-      --yellow-bg: #fef3c7;
-      --red: #dc2626;
-      --red-bg: #fee2e2;
-      --red-border: #f87171;
-      --planned: #2563eb;
-      --planned-bg: #dbeafe;
-      --shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
-      --radius: 14px;
-      --radius-sm: 8px;
+      --bg: #faf4ec;
+      --bg-pattern: radial-gradient(#e8dccb 1px, transparent 1px);
+      --surface: #fffdf9;
+      --surface-alt: #f4ece0;
+      --surface-highlight: #efe4d4;
+      --border: #e2d4c1;
+      --text: #3b2d22;
+      --text-muted: #7a6655;
+      --primary: #c0603e;
+      --primary-hover: #a64d2e;
+      --primary-soft: #fbe6dc;
+      --accent-sage: #4a7c59;
+      --green: #2d6a4f;
+      --green-bg: #e3f4eb;
+      --yellow: #b4690e;
+      --yellow-bg: #fef1d8;
+      --red: #c93b2b;
+      --red-bg: #fde8e5;
+      --red-border: #eb857a;
+      --planned: #3d6b88;
+      --planned-bg: #e4eff6;
+      --shadow: 0 4px 16px rgba(82, 58, 36, 0.07);
+      --radius: 16px;
+      --radius-sm: 10px;
     }
 
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #0d1117;
-        --surface: #161b22;
-        --surface-alt: #21262d;
-        --border: #30363d;
-        --text: #e6edf3;
-        --text-muted: #8b949e;
-        --primary: #14b8a6;
-        --primary-hover: #2dd4bf;
-        --primary-soft: #134e4a;
-        --green: #22c55e;
-        --green-bg: rgba(34, 197, 94, 0.15);
-        --yellow: #f59e0b;
-        --yellow-bg: rgba(245, 158, 11, 0.15);
-        --red: #f87171;
-        --red-bg: rgba(248, 113, 113, 0.16);
-        --red-border: #ef4444;
-        --planned: #60a5fa;
-        --planned-bg: rgba(96, 165, 250, 0.16);
-        --shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
-      }
+    html[data-theme="dark"] {
+      --bg: #221c17;
+      --bg-pattern: radial-gradient(#332a22 1px, transparent 1px);
+      --surface: #2c241e;
+      --surface-alt: #382e26;
+      --surface-highlight: #44382e;
+      --border: #4d4035;
+      --text: #f5ebe0;
+      --text-muted: #b8a593;
+      --primary: #e07a5f;
+      --primary-hover: #eb947c;
+      --primary-soft: #4a2c23;
+      --accent-sage: #81b29a;
+      --green: #52b788;
+      --green-bg: rgba(82, 183, 136, 0.16);
+      --yellow: #f4a261;
+      --yellow-bg: rgba(244, 162, 97, 0.16);
+      --red: #f28482;
+      --red-bg: rgba(242, 132, 130, 0.16);
+      --red-border: #e6605d;
+      --planned: #8ecae6;
+      --planned-bg: rgba(142, 202, 230, 0.16);
+      --shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
     }
 
     /* =========================================================
@@ -66,21 +70,61 @@
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-family: "Georgia", "Palatino Linotype", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background-color: var(--bg);
+      background-image: var(--bg-pattern);
+      background-size: 22px 22px;
       color: var(--text);
-      line-height: 1.5;
+      line-height: 1.55;
       padding-bottom: 3rem;
       -webkit-font-smoothing: antialiased;
+    }
+
+    input, select, button, .sans-ui {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
 
     .container {
       max-width: 1080px;
       margin: 0 auto;
-      padding: 1rem;
+      padding: 1.15rem;
       display: flex;
       flex-direction: column;
       gap: 1.25rem;
+    }
+
+    /* Editable Titles & Labels */
+    .editable-title {
+      border: 1px dashed transparent;
+      border-radius: 6px;
+      padding: 0.1rem 0.35rem;
+      margin: -0.1rem -0.35rem;
+      background: transparent;
+      color: inherit;
+      font: inherit;
+      cursor: text;
+      transition: border-color 0.15s ease, background-color 0.15s ease;
+    }
+
+    .editable-title:hover {
+      border-color: var(--border);
+      background: var(--surface-alt);
+    }
+
+    .editable-title:focus {
+      outline: 2px solid var(--primary);
+      border-color: transparent;
+      background: var(--surface);
+    }
+
+    .edit-hint {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
     }
 
     /* =========================================================
@@ -89,11 +133,11 @@
     header {
       display: flex;
       flex-direction: column;
-      gap: 0.75rem;
+      gap: 0.85rem;
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 1.1rem 1.25rem;
+      padding: 1.25rem 1.35rem;
       box-shadow: var(--shadow);
     }
 
@@ -105,13 +149,33 @@
       gap: 0.75rem;
     }
 
-    h1 {
-      font-size: 1.4rem;
-      font-weight: 800;
-      letter-spacing: -0.02em;
+    .brand-area {
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+      flex: 1;
+      min-width: 240px;
+    }
+
+    .app-title-input {
+      font-family: "Georgia", serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text);
+      width: 100%;
+    }
+
+    .app-subtitle-input {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      width: 100%;
+    }
+
+    .header-controls {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.6rem;
+      flex-wrap: wrap;
     }
 
     /* Period Selector Tabs */
@@ -128,9 +192,9 @@
       background: transparent;
       color: var(--text-muted);
       font-weight: 600;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       padding: 0.45rem 0.9rem;
-      border-radius: 6px;
+      border-radius: 7px;
       cursor: pointer;
       transition: all 0.15s ease;
     }
@@ -138,6 +202,7 @@
     .period-tab.active {
       background: var(--primary);
       color: #ffffff;
+      box-shadow: 0 2px 6px rgba(192, 96, 62, 0.25);
     }
 
     /* Date Navigation Bar */
@@ -146,15 +211,16 @@
       align-items: center;
       justify-content: space-between;
       background: var(--surface-alt);
-      padding: 0.55rem 0.75rem;
+      padding: 0.6rem 0.85rem;
       border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
       gap: 0.5rem;
     }
 
     .period-nav-center {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.55rem;
       flex-wrap: wrap;
       justify-content: center;
       text-align: center;
@@ -172,7 +238,7 @@
       border: 2px solid var(--red-border);
       color: var(--red);
       border-radius: var(--radius);
-      padding: 0.9rem 1.1rem;
+      padding: 0.95rem 1.15rem;
       box-shadow: var(--shadow);
     }
 
@@ -194,6 +260,7 @@
       padding-left: 1.4rem;
       font-weight: 600;
       font-size: 0.95rem;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
 
     /* =========================================================
@@ -203,14 +270,14 @@
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 1.2rem;
+      padding: 1.3rem;
       box-shadow: var(--shadow);
     }
 
     .section-title {
-      font-size: 1.15rem;
+      font-size: 1.2rem;
       font-weight: 700;
-      margin-bottom: 0.9rem;
+      margin-bottom: 0.95rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -218,12 +285,19 @@
       gap: 0.5rem;
     }
 
+    .section-title-left {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+
     .btn {
       border: 1px solid var(--border);
       background: var(--surface);
       color: var(--text);
       font-weight: 600;
-      font-size: 0.88rem;
+      font-size: 0.86rem;
       padding: 0.45rem 0.85rem;
       border-radius: var(--radius-sm);
       cursor: pointer;
@@ -235,7 +309,7 @@
     }
 
     .btn:hover {
-      background: var(--surface-alt);
+      background: var(--surface-highlight);
     }
 
     .btn-primary {
@@ -248,6 +322,16 @@
       background: var(--primary-hover);
     }
 
+    .btn-sage {
+      background: var(--accent-sage);
+      border-color: var(--accent-sage);
+      color: #ffffff;
+    }
+
+    .btn-sage:hover {
+      opacity: 0.92;
+    }
+
     .btn-danger {
       color: var(--red);
       border-color: var(--red-border);
@@ -258,11 +342,14 @@
     }
 
     .btn-sm {
-      padding: 0.28rem 0.6rem;
+      padding: 0.3rem 0.65rem;
       font-size: 0.8rem;
     }
 
-    input, select {
+    input[type="text"],
+    input[type="number"],
+    input[type="date"],
+    select {
       width: 100%;
       padding: 0.55rem 0.7rem;
       border-radius: var(--radius-sm);
@@ -270,7 +357,6 @@
       background: var(--surface);
       color: var(--text);
       font-size: 0.95rem;
-      font-family: inherit;
     }
 
     input:focus, select:focus {
@@ -280,6 +366,7 @@
 
     label {
       display: block;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       font-size: 0.82rem;
       font-weight: 600;
       color: var(--text-muted);
@@ -287,19 +374,19 @@
     }
 
     /* =========================================================
-       5. SUMMARY METRICS & CATEGORY CARDS
+       5. SUMMARY METRICS & CUSTOMIZABLE CATEGORY CARDS
        ========================================================= */
     .summary-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 0.85rem;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 0.9rem;
     }
 
     .stat-box {
       background: var(--surface-alt);
       border: 1px solid var(--border);
       border-radius: var(--radius-sm);
-      padding: 0.9rem 1rem;
+      padding: 0.95rem 1.05rem;
     }
 
     .stat-box.over-budget {
@@ -307,22 +394,34 @@
       border-color: var(--red-border);
     }
 
-    .stat-label {
-      font-size: 0.82rem;
-      font-weight: 600;
+    .stat-label-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.35rem;
+    }
+
+    .stat-label-input {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 0.8rem;
+      font-weight: 700;
       color: var(--text-muted);
       text-transform: uppercase;
-      letter-spacing: 0.03em;
+      letter-spacing: 0.04em;
+      width: auto;
+      max-width: 180px;
     }
 
     .stat-value {
-      font-size: 1.55rem;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 1.6rem;
       font-weight: 800;
       margin-top: 0.2rem;
       font-variant-numeric: tabular-nums;
     }
 
     .stat-sub {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       font-size: 0.82rem;
       margin-top: 0.25rem;
       color: var(--text-muted);
@@ -345,28 +444,30 @@
       display: inline-block;
       background: var(--red);
       color: #ffffff;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       font-size: 0.72rem;
       font-weight: 700;
-      padding: 0.15rem 0.45rem;
+      padding: 0.15rem 0.5rem;
       border-radius: 999px;
       text-transform: uppercase;
       letter-spacing: 0.04em;
       vertical-align: middle;
-      margin-left: 0.35rem;
+      white-space: nowrap;
     }
 
     .badge-projected-over {
       display: inline-block;
       background: var(--yellow);
       color: #ffffff;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       font-size: 0.72rem;
       font-weight: 700;
-      padding: 0.15rem 0.45rem;
+      padding: 0.15rem 0.5rem;
       border-radius: 999px;
       text-transform: uppercase;
       letter-spacing: 0.04em;
       vertical-align: middle;
-      margin-left: 0.35rem;
+      white-space: nowrap;
     }
 
     /* Allowance & Category Budget Config */
@@ -375,13 +476,14 @@
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 0.9rem;
       align-items: end;
-      margin-bottom: 1.1rem;
-      padding-bottom: 1rem;
+      margin-bottom: 1.15rem;
+      padding-bottom: 1.05rem;
       border-bottom: 1px solid var(--border);
     }
 
     .unassigned-box {
-      padding: 0.6rem 0.85rem;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      padding: 0.6rem 0.9rem;
       border-radius: var(--radius-sm);
       background: var(--surface-alt);
       border: 1px solid var(--border);
@@ -394,18 +496,19 @@
 
     .categories-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(285px, 1fr));
+      gap: 1.05rem;
     }
 
     .category-card {
       background: var(--surface-alt);
       border: 1px solid var(--border);
       border-radius: var(--radius-sm);
-      padding: 1rem;
+      padding: 1.05rem;
       display: flex;
       flex-direction: column;
       gap: 0.75rem;
+      transition: border-color 0.2s ease;
     }
 
     .category-card.is-over {
@@ -417,29 +520,62 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.45rem;
     }
 
-    .category-name {
+    .category-name-input {
+      font-family: "Georgia", serif;
       font-weight: 700;
-      font-size: 1.02rem;
+      font-size: 1.08rem;
+      flex: 1;
+      min-width: 120px;
+      border: 1px dashed var(--border);
+      background: var(--surface);
+      padding: 0.28rem 0.5rem;
+      border-radius: 6px;
+      color: var(--text);
+    }
+
+    .cat-actions-right {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .meal-link-btn {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 0.73rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-muted);
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .meal-link-btn.active {
+      background: var(--planned-bg);
+      border-color: var(--planned);
+      color: var(--planned);
     }
 
     .cat-metrics {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 0.5rem;
       background: var(--surface);
       padding: 0.65rem;
-      border-radius: 6px;
+      border-radius: 8px;
       border: 1px solid var(--border);
       text-align: center;
     }
 
     .cat-metric-label {
-      font-size: 0.72rem;
+      font-size: 0.71rem;
       color: var(--text-muted);
-      font-weight: 600;
+      font-weight: 700;
       text-transform: uppercase;
     }
 
@@ -451,9 +587,10 @@
     }
 
     .planned-box {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background: var(--planned-bg);
-      border-radius: 6px;
-      padding: 0.55rem 0.75rem;
+      border-radius: 8px;
+      padding: 0.6rem 0.75rem;
       font-size: 0.84rem;
       display: flex;
       flex-direction: column;
@@ -496,6 +633,7 @@
     }
 
     .progress-caption {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       display: flex;
       justify-content: space-between;
       font-size: 0.78rem;
@@ -512,13 +650,14 @@
       gap: 0.75rem;
       align-items: end;
       background: var(--surface-alt);
-      padding: 0.9rem;
+      padding: 0.95rem;
       border-radius: var(--radius-sm);
       border: 1px solid var(--border);
       margin-bottom: 1rem;
     }
 
     .expense-list {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       display: flex;
       flex-direction: column;
       gap: 0.5rem;
@@ -528,7 +667,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0.75rem 0.9rem;
+      padding: 0.75rem 0.95rem;
       background: var(--surface-alt);
       border: 1px solid var(--border);
       border-radius: var(--radius-sm);
@@ -559,7 +698,7 @@
     .cat-pill {
       background: var(--surface);
       border: 1px solid var(--border);
-      padding: 0.1rem 0.45rem;
+      padding: 0.1rem 0.5rem;
       border-radius: 999px;
       font-weight: 600;
       font-size: 0.75rem;
@@ -568,7 +707,7 @@
     .expense-right {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
+      gap: 0.65rem;
       margin-left: auto;
     }
 
@@ -579,9 +718,10 @@
     }
 
     .empty-state {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       text-align: center;
       color: var(--text-muted);
-      padding: 1.25rem;
+      padding: 1.3rem;
       font-size: 0.92rem;
       background: var(--surface-alt);
       border-radius: var(--radius-sm);
@@ -591,10 +731,36 @@
     /* =========================================================
        7. MEAL PLANNER & GROCERY LIST
        ========================================================= */
+    .meal-slot-names-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.85rem;
+      padding: 0.6rem 0.8rem;
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+    }
+
+    .meal-slot-names-bar span {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .slot-name-chip {
+      width: 115px !important;
+      padding: 0.3rem 0.5rem !important;
+      font-size: 0.82rem !important;
+      font-weight: 600;
+    }
+
     .meal-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-      gap: 0.85rem;
+      grid-template-columns: repeat(auto-fill, minmax(245px, 1fr));
+      gap: 0.9rem;
       max-height: 540px;
       overflow-y: auto;
       padding-right: 0.25rem;
@@ -604,7 +770,7 @@
       background: var(--surface-alt);
       border: 1px solid var(--border);
       border-radius: var(--radius-sm);
-      padding: 0.8rem;
+      padding: 0.85rem;
       display: flex;
       flex-direction: column;
       gap: 0.55rem;
@@ -612,6 +778,7 @@
 
     .day-card.is-today {
       border: 2px solid var(--primary);
+      background: var(--surface);
     }
 
     .day-header {
@@ -619,12 +786,13 @@
       justify-content: space-between;
       align-items: center;
       font-weight: 700;
-      font-size: 0.92rem;
+      font-size: 0.94rem;
       padding-bottom: 0.35rem;
       border-bottom: 1px solid var(--border);
     }
 
     .day-total {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       font-size: 0.82rem;
       color: var(--planned);
       font-weight: 700;
@@ -637,6 +805,7 @@
     }
 
     .meal-slot-label {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       font-size: 0.73rem;
       font-weight: 700;
       color: var(--text-muted);
@@ -698,17 +867,17 @@
     }
 
     .grocery-text-input {
-      border: 1px solid transparent;
-      background: transparent;
+      border: 1px solid transparent !important;
+      background: transparent !important;
       flex: 1;
-      padding: 0.25rem 0.4rem;
-      font-size: 0.92rem;
+      padding: 0.25rem 0.4rem !important;
+      font-size: 0.92rem !important;
       font-weight: 500;
     }
 
     .grocery-text-input:focus {
-      background: var(--surface);
-      border-color: var(--border);
+      background: var(--surface) !important;
+      border-color: var(--border) !important;
     }
 
     /* =========================================================
@@ -722,6 +891,7 @@
     }
 
     .status-toast {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       font-size: 0.85rem;
       font-weight: 600;
       color: var(--primary);
@@ -747,15 +917,38 @@
 <body>
   <div class="container">
     <!-- =======================================================
-         1. HEADER & BUDGET PERIOD SELECTOR
+         1. HEADER & BUDGET PERIOD SELECTOR (Customizable Title)
          ======================================================= -->
     <header>
       <div class="header-top">
-        <h1>🍲 Meal &amp; Budget Planner</h1>
-        <div class="period-tabs" role="tablist" aria-label="Budget Period">
-          <button type="button" class="period-tab" data-period="daily" onclick="setPeriodType('daily')">Daily</button>
-          <button type="button" class="period-tab" data-period="weekly" onclick="setPeriodType('weekly')">Weekly</button>
-          <button type="button" class="period-tab" data-period="monthly" onclick="setPeriodType('monthly')">Monthly</button>
+        <div class="brand-area">
+          <input
+            id="titleApp"
+            type="text"
+            class="editable-title app-title-input"
+            value="🍲 Our Home Meal &amp; Budget Planner"
+            title="Click to customize title"
+            oninput="handleTitleChange('appTitle', this.value)"
+          />
+          <input
+            id="titleSubtitle"
+            type="text"
+            class="editable-title app-subtitle-input"
+            value="✨ Click any title or category name to customize it"
+            title="Click to customize subtitle"
+            oninput="handleTitleChange('appSubtitle', this.value)"
+          />
+        </div>
+
+        <div class="header-controls">
+          <button type="button" id="themeToggleBtn" class="btn btn-sm" onclick="toggleTheme()">
+            🌙 Cozy Dark
+          </button>
+          <div class="period-tabs" role="tablist" aria-label="Budget Period">
+            <button type="button" class="period-tab" data-period="daily" onclick="setPeriodType('daily')">Daily</button>
+            <button type="button" class="period-tab" data-period="weekly" onclick="setPeriodType('weekly')">Weekly</button>
+            <button type="button" class="period-tab" data-period="monthly" onclick="setPeriodType('monthly')">Monthly</button>
+          </div>
         </div>
       </div>
 
@@ -778,26 +971,60 @@
     </div>
 
     <!-- =======================================================
-         3. OVERALL SUMMARY CARD
+         3. OVERALL SUMMARY CARD (Customizable Titles)
          ======================================================= -->
     <section class="card" aria-label="Overall Budget Summary">
       <div class="section-title">
-        <span>Overall Summary (<span id="summaryPeriodName">Weekly</span>)</span>
+        <div class="section-title-left">
+          <input
+            id="titleSummarySection"
+            type="text"
+            class="editable-title"
+            style="width: 175px;"
+            value="Overall Summary"
+            title="Click to rename section"
+            oninput="handleTitleChange('summarySection', this.value)"
+          />
+          <span>(<span id="summaryPeriodName">Weekly</span>)</span>
+        </div>
+        <span class="edit-hint">✏️ Click titles or categories to edit</span>
       </div>
       <div class="summary-grid">
         <div class="stat-box">
-          <div class="stat-label">Total Allowance</div>
+          <div class="stat-label-row">
+            <input
+              id="titleAllowanceBox"
+              type="text"
+              class="editable-title stat-label-input"
+              value="Total Allowance"
+              oninput="handleTitleChange('allowanceBox', this.value)"
+            />
+          </div>
           <div id="sumAllowance" class="stat-value">₱0.00</div>
           <div id="sumUnassignedSub" class="stat-sub">Unassigned: ₱0.00</div>
         </div>
         <div class="stat-box">
-          <div class="stat-label">Total Spent</div>
+          <div class="stat-label-row">
+            <input
+              id="titleSpentBox"
+              type="text"
+              class="editable-title stat-label-input"
+              value="Total Spent"
+              oninput="handleTitleChange('spentBox', this.value)"
+            />
+          </div>
           <div id="sumSpent" class="stat-value">₱0.00</div>
           <div id="sumPlannedSub" class="stat-sub">Planned Meals: ₱0.00</div>
         </div>
         <div id="sumRemainingBox" class="stat-box">
-          <div class="stat-label">
-            Total Remaining
+          <div class="stat-label-row">
+            <input
+              id="titleRemainingBox"
+              type="text"
+              class="editable-title stat-label-input"
+              value="Total Remaining"
+              oninput="handleTitleChange('remainingBox', this.value)"
+            />
             <span id="sumOverBadge" class="badge-over" style="display: none;">Over budget</span>
           </div>
           <div id="sumRemaining" class="stat-value">₱0.00</div>
@@ -807,11 +1034,22 @@
     </section>
 
     <!-- =======================================================
-         4. ALLOWANCE & CATEGORY BUDGETS + OVERFLOW PROGRESS
+         4. ALLOWANCE & CUSTOMIZABLE CATEGORY BUDGETS
          ======================================================= -->
     <section class="card" aria-label="Allowance and Category Budgets">
       <div class="section-title">
-        <span>Allowance &amp; Category Budgets</span>
+        <input
+          id="titleBudgetSection"
+          type="text"
+          class="editable-title"
+          style="min-width: 260px;"
+          value="Allowance &amp; Category Budgets"
+          title="Click to rename section"
+          oninput="handleTitleChange('budgetSection', this.value)"
+        />
+        <button type="button" class="btn btn-sm btn-sage" onclick="addNewCategory()">
+          + Add Category
+        </button>
       </div>
 
       <div class="allowance-bar">
@@ -840,8 +1078,16 @@
          ======================================================= -->
     <section class="card" aria-label="Expense Tracking">
       <div class="section-title">
-        <span>Expenses for Selected Period</span>
-        <span id="expenseCountLabel" style="font-size: 0.85rem; color: var(--text-muted);">0 items</span>
+        <input
+          id="titleExpenseSection"
+          type="text"
+          class="editable-title"
+          style="min-width: 250px;"
+          value="Expenses for Selected Period"
+          title="Click to rename section"
+          oninput="handleTitleChange('expenseSection', this.value)"
+        />
+        <span id="expenseCountLabel" class="sans-ui" style="font-size: 0.85rem; color: var(--text-muted);">0 items</span>
       </div>
 
       <form id="expenseForm" class="expense-form" onsubmit="handleExpenseSubmit(event)">
@@ -852,11 +1098,7 @@
         </div>
         <div>
           <label for="expenseCategory">Category</label>
-          <select id="expenseCategory" required>
-            <option value="grocery">Grocery Food</option>
-            <option value="household">Household Supplies</option>
-            <option value="other">Other</option>
-          </select>
+          <select id="expenseCategory" required></select>
         </div>
         <div>
           <label for="expenseName">Item Name</label>
@@ -880,14 +1122,25 @@
          ======================================================= -->
     <section class="card" aria-label="Meal Planner">
       <div class="section-title">
-        <span>Meal Planner (<span id="mealPlannerSummary" class="text-planned">Planned: ₱0.00</span>)</span>
+        <div class="section-title-left">
+          <input
+            id="titleMealSection"
+            type="text"
+            class="editable-title"
+            style="width: 150px;"
+            value="Meal Planner"
+            title="Click to rename section"
+            oninput="handleTitleChange('mealSection', this.value)"
+          />
+          <span class="sans-ui" style="font-size: 0.95rem;">(<span id="mealPlannerSummary" class="text-planned">Planned: ₱0.00</span>)</span>
+        </div>
         <button type="button" class="btn btn-sm btn-primary" onclick="syncMealsToGroceryList()">
           + Sync Meals to Grocery List
         </button>
       </div>
-      <p style="font-size: 0.86rem; color: var(--text-muted); margin-bottom: 0.85rem;">
-        Estimated meal costs count toward <strong>Grocery Food</strong> as <strong>Planned</strong> spending and update your <strong>Projected</strong> total (Spent + Planned).
-      </p>
+
+      <div id="mealSlotNamesBar" class="meal-slot-names-bar"></div>
+
       <div id="mealGrid" class="meal-grid"></div>
     </section>
 
@@ -896,7 +1149,15 @@
          ======================================================= -->
     <section class="card" aria-label="Grocery List">
       <div class="section-title">
-        <span>Grocery List</span>
+        <input
+          id="titleGrocerySection"
+          type="text"
+          class="editable-title"
+          style="width: 180px;"
+          value="Grocery &amp; Shopping List"
+          title="Click to rename section"
+          oninput="handleTitleChange('grocerySection', this.value)"
+        />
         <button type="button" class="btn btn-sm" onclick="clearCheckedGroceries()">Clear Checked</button>
       </div>
 
@@ -936,22 +1197,35 @@
 
   <script>
     /* =========================================================
-       1. CONSTANTS & DEFAULT STATE
+       1. CONSTANTS & DEFAULT STATE (Customizable Categories & Titles)
        ========================================================= */
     const STORAGE_KEY = "meal_budget_planner_v1";
 
-    const CATEGORIES = [
+    const DEFAULT_CATEGORIES = [
       { id: "grocery", name: "Grocery Food" },
       { id: "household", name: "Household Supplies" },
       { id: "other", name: "Other" }
     ];
 
-    const MEAL_SLOTS = [
+    const DEFAULT_MEAL_SLOTS = [
       { id: "breakfast", label: "Breakfast" },
       { id: "lunch", label: "Lunch" },
       { id: "dinner", label: "Dinner" },
       { id: "snack", label: "Snack" }
     ];
+
+    const DEFAULT_TITLES = {
+      appTitle: "🍲 Our Home Meal & Budget Planner",
+      appSubtitle: "✨ Click any title or category name to customize it",
+      summarySection: "Overall Summary",
+      allowanceBox: "Total Allowance",
+      spentBox: "Total Spent",
+      remainingBox: "Total Remaining",
+      budgetSection: "Allowance & Category Budgets",
+      expenseSection: "Expenses for Selected Period",
+      mealSection: "Meal Planner",
+      grocerySection: "Grocery & Shopping List"
+    };
 
     function getTodayISO() {
       const now = new Date();
@@ -972,16 +1246,21 @@
 
     function createDefaultState() {
       return {
+        theme: "light", // Warm, light & homey by default
         periodType: "weekly",
         anchorDate: getTodayISO(),
+        titles: { ...DEFAULT_TITLES },
+        categories: JSON.parse(JSON.stringify(DEFAULT_CATEGORIES)),
+        mealCategoryId: "grocery",
+        mealSlots: JSON.parse(JSON.stringify(DEFAULT_MEAL_SLOTS)),
         budgets: {
           daily: { allowance: 500, categories: { grocery: 300, household: 100, other: 100 } },
           weekly: { allowance: 3500, categories: { grocery: 2000, household: 800, other: 500 } },
           monthly: { allowance: 15000, categories: { grocery: 9000, household: 3500, other: 2000 } }
         },
         expenses: [],
-        meals: {}, // keyed by "YYYY-MM-DD": { breakfast: { name, cost }, lunch: ..., dinner: ..., snack: ... }
-        groceryList: [] // [{ id, text, checked, sourceMealKey }]
+        meals: {},
+        groceryList: []
       };
     }
 
@@ -996,13 +1275,45 @@
         if (!raw) return createDefaultState();
         const parsed = JSON.parse(raw);
         const def = createDefaultState();
+
+        const categories =
+          Array.isArray(parsed.categories) && parsed.categories.length > 0
+            ? parsed.categories
+            : def.categories;
+
+        const mealSlots =
+          Array.isArray(parsed.mealSlots) && parsed.mealSlots.length > 0
+            ? parsed.mealSlots
+            : def.mealSlots;
+
+        const mealCategoryId = categories.some((c) => c.id === parsed.mealCategoryId)
+          ? parsed.mealCategoryId
+          : categories[0].id;
+
         return {
+          theme: parsed.theme === "dark" ? "dark" : "light",
           periodType: ["daily", "weekly", "monthly"].includes(parsed.periodType) ? parsed.periodType : def.periodType,
           anchorDate: parsed.anchorDate || def.anchorDate,
+          titles: { ...def.titles, ...(parsed.titles || {}) },
+          categories,
+          mealCategoryId,
+          mealSlots,
           budgets: {
-            daily: { ...def.budgets.daily, ...(parsed.budgets?.daily || {}), categories: { ...def.budgets.daily.categories, ...(parsed.budgets?.daily?.categories || {}) } },
-            weekly: { ...def.budgets.weekly, ...(parsed.budgets?.weekly || {}), categories: { ...def.budgets.weekly.categories, ...(parsed.budgets?.weekly?.categories || {}) } },
-            monthly: { ...def.budgets.monthly, ...(parsed.budgets?.monthly || {}), categories: { ...def.budgets.monthly.categories, ...(parsed.budgets?.monthly?.categories || {}) } }
+            daily: {
+              ...def.budgets.daily,
+              ...(parsed.budgets?.daily || {}),
+              categories: { ...def.budgets.daily.categories, ...(parsed.budgets?.daily?.categories || {}) }
+            },
+            weekly: {
+              ...def.budgets.weekly,
+              ...(parsed.budgets?.weekly || {}),
+              categories: { ...def.budgets.weekly.categories, ...(parsed.budgets?.weekly?.categories || {}) }
+            },
+            monthly: {
+              ...def.budgets.monthly,
+              ...(parsed.budgets?.monthly || {}),
+              categories: { ...def.budgets.monthly.categories, ...(parsed.budgets?.monthly?.categories || {}) }
+            }
           },
           expenses: Array.isArray(parsed.expenses) ? parsed.expenses : [],
           meals: parsed.meals && typeof parsed.meals === "object" ? parsed.meals : {},
@@ -1034,7 +1345,145 @@
     }
 
     /* =========================================================
-       3. PERIOD DATE RANGE CALCULATIONS
+       3. THEME & CUSTOMIZATION HANDLERS (Titles, Categories, Slots)
+       ========================================================= */
+    function applyTheme() {
+      if ( document.documentElement ) {
+        document.documentElement.setAttribute("data-theme", state.theme || "light");
+      }
+      const btn = document.getElementById("themeToggleBtn");
+      if (btn) {
+        btn.textContent = state.theme === "dark" ? "☀️ Homey Light" : "🌙 Cozy Dark";
+      }
+    }
+
+    function toggleTheme() {
+      state.theme = state.theme === "dark" ? "light" : "dark";
+      applyTheme();
+      saveState(state.theme === "light" ? "Switched to Homey Light theme" : "Switched to Cozy Dark theme");
+    }
+
+    function handleTitleChange(key, value) {
+      state.titles[key] = value;
+      saveState("Title customized");
+    }
+
+    function renderCustomTitles() {
+      const map = {
+        titleApp: "appTitle",
+        titleSubtitle: "appSubtitle",
+        titleSummarySection: "summarySection",
+        titleAllowanceBox: "allowanceBox",
+        titleSpentBox: "spentBox",
+        titleRemainingBox: "remainingBox",
+        titleBudgetSection: "budgetSection",
+        titleExpenseSection: "expenseSection",
+        titleMealSection: "mealSection",
+        titleGrocerySection: "grocerySection"
+      };
+      Object.entries(map).forEach(([elId, key]) => {
+        const el = document.getElementById(elId);
+        if (el && document.activeElement !== el) {
+          el.value = state.titles[key] ?? DEFAULT_TITLES[key];
+        }
+      });
+    }
+
+    function handleCategoryNameChange(catId, newName) {
+      const cat = state.categories.find((c) => c.id === catId);
+      if (!cat) return;
+      cat.name = newName;
+      saveState("Category renamed");
+      renderExpenseCategoryDropdown();
+      renderSummaryAndCategories(false);
+      renderExpenses();
+    }
+
+    function addNewCategory() {
+      const id = "cat_" + Date.now();
+      const newName = `New Category ${state.categories.length + 1}`;
+      state.categories.push({ id, name: newName });
+      ["daily", "weekly", "monthly"].forEach((p) => {
+        state.budgets[p].categories[id] = 0;
+      });
+      saveState("Added new category");
+      renderAll();
+      const input = document.getElementById(`catNameInput_${id}`);
+      if (input) {
+        input.focus();
+        input.select();
+      }
+    }
+
+    function deleteCategory(catId) {
+      if (state.categories.length <= 1) {
+        alert("Please keep at least one spending category.");
+        return;
+      }
+      const cat = state.categories.find((c) => c.id === catId);
+      const confirmed = window.confirm(`Remove category "${cat ? cat.name : catId}"?`);
+      if (!confirmed) return;
+
+      state.categories = state.categories.filter((c) => c.id !== catId);
+      const fallbackId = state.categories[0].id;
+      if (state.mealCategoryId === catId) {
+        state.mealCategoryId = fallbackId;
+      }
+      // Reassign any existing expenses from deleted category to first category
+      state.expenses.forEach((e) => {
+        if (e.category === catId) e.category = fallbackId;
+      });
+      saveState("Category removed");
+      renderAll();
+    }
+
+    function setMealLinkedCategory(catId) {
+      state.mealCategoryId = catId;
+      saveState("Updated meal-linked category");
+      renderSummaryAndCategories(true);
+    }
+
+    function handleMealSlotLabelChange(slotId, newLabel) {
+      const slot = state.mealSlots.find((s) => s.id === slotId);
+      if (!slot) return;
+      slot.label = newLabel;
+      saveState("Meal slot renamed");
+      renderMealPlanner();
+    }
+
+    function renderMealSlotNamesBar() {
+      const bar = document.getElementById("mealSlotNamesBar");
+      if (!bar) return;
+      bar.innerHTML =
+        `<span>Meal Slots (click to rename):</span>` +
+        state.mealSlots
+          .map(
+            (slot) => `
+          <input
+            type="text"
+            class="slot-name-chip"
+            value="${escapeHtml(slot.label)}"
+            oninput="handleMealSlotLabelChange('${slot.id}', this.value)"
+          />
+        `
+          )
+          .join("");
+    }
+
+    function renderExpenseCategoryDropdown() {
+      const select = document.getElementById("expenseCategory");
+      if (!select) return;
+      const currentVal = select.value;
+      select.innerHTML = state.categories
+        .map((c) => `<option value="${c.id}">${escapeHtml(c.name || "Unnamed")}</option>`)
+        .join("");
+      if (state.categories.some((c) => c.id === currentVal)) {
+        select.value = currentVal;
+      }
+    }
+
+    /* =========================================================
+       4. PERIOD DATE RANGE CALCULATIONS
        ========================================================= */
     function getPeriodBounds(periodType, anchorISO) {
       const anchor = parseDateISO(anchorISO);
@@ -1044,15 +1493,13 @@
         start = new Date(anchor);
         end = new Date(anchor);
       } else if (periodType === "weekly") {
-        // Week starts on Monday (ISO) and ends on Sunday
-        const day = anchor.getDay(); // 0 = Sun, 1 = Mon, ...
+        const day = anchor.getDay();
         const diffToMon = day === 0 ? -6 : 1 - day;
         start = new Date(anchor);
         start.setDate(anchor.getDate() + diffToMon);
         end = new Date(start);
         end.setDate(start.getDate() + 6);
       } else {
-        // Monthly: 1st to last day of month
         start = new Date(anchor.getFullYear(), anchor.getMonth(), 1);
         end = new Date(anchor.getFullYear(), anchor.getMonth() + 1, 0);
       }
@@ -1089,7 +1536,6 @@
         const sameYear = startDate.getFullYear() === endDate.getFullYear();
         return `${shortMonthDay(startDate)} – ${shortMonthDay(endDate)}${sameYear ? `, ${endDate.getFullYear()}` : ""}`;
       }
-      // Monthly
       return `${shortMonthDay(startDate)} – ${shortMonthDay(endDate)}, ${startDate.getFullYear()}`;
     }
 
@@ -1124,7 +1570,7 @@
 
     function syncDefaultExpenseDate() {
       const expenseEditId = document.getElementById("expenseEditId").value;
-      if (expenseEditId) return; // Don't overwrite date while editing an existing item
+      if (expenseEditId) return;
       const bounds = getPeriodBounds(state.periodType, state.anchorDate);
       const today = getTodayISO();
       const dateInput = document.getElementById("expenseDate");
@@ -1136,7 +1582,7 @@
     }
 
     /* =========================================================
-       4. ALLOWANCE & CATEGORY BUDGET HANDLERS
+       5. ALLOWANCE & CATEGORY BUDGET HANDLERS
        ========================================================= */
     function handleAllowanceChange(val) {
       const num = Math.max(0, parseFloat(val) || 0);
@@ -1153,7 +1599,7 @@
     }
 
     /* =========================================================
-       5. EXPENSE CRUD HANDLERS
+       6. EXPENSE CRUD HANDLERS
        ========================================================= */
     function handleExpenseSubmit(event) {
       event.preventDefault();
@@ -1220,7 +1666,7 @@
     }
 
     /* =========================================================
-       6. MEAL PLANNER & GROCERY LIST HANDLERS
+       7. MEAL PLANNER & GROCERY LIST HANDLERS
        ========================================================= */
     function handleMealChange(dateISO, slotId, field, value) {
       if (!state.meals[dateISO]) {
@@ -1255,7 +1701,7 @@
       }
 
       const shortDate = parseDateISO(dateISO).toLocaleDateString("en-US", { month: "short", day: "numeric" });
-      const slotLabel = MEAL_SLOTS.find((s) => s.id === slotId)?.label || slotId;
+      const slotLabel = state.mealSlots.find((s) => s.id === slotId)?.label || slotId;
       const formattedText = `${mealName} (${shortDate} ${slotLabel})`;
 
       if (existingIdx !== -1) {
@@ -1276,7 +1722,7 @@
 
       bounds.days.forEach((dateISO) => {
         const dayMeals = state.meals[dateISO] || {};
-        MEAL_SLOTS.forEach((slot) => {
+        state.mealSlots.forEach((slot) => {
           const entry = dayMeals[slot.id];
           if (entry && entry.name && entry.name.trim()) {
             const mealKey = `${dateISO}_${slot.id}`;
@@ -1343,7 +1789,7 @@
     }
 
     /* =========================================================
-       7. EXPORT, IMPORT & RESET DATA
+       8. EXPORT, IMPORT & RESET DATA
        ========================================================= */
     function exportDataJson() {
       const dataStr = JSON.stringify(state, null, 2);
@@ -1386,7 +1832,7 @@
 
     function resetAllData() {
       const confirmed = window.confirm(
-        "Are you sure you want to reset all budgets, expenses, meal plans, and grocery items? This cannot be undone."
+        "Are you sure you want to reset all budgets, custom categories, expenses, meal plans, and grocery items? This cannot be undone."
       );
       if (!confirmed) return;
       localStorage.removeItem(STORAGE_KEY);
@@ -1398,40 +1844,45 @@
     }
 
     /* =========================================================
-       8. RENDERING FUNCTIONS
+       9. RENDERING FUNCTIONS
        ========================================================= */
     function getPeriodCalculations() {
       const bounds = getPeriodBounds(state.periodType, state.anchorDate);
       const periodBudget = state.budgets[state.periodType];
 
-      // Filter expenses within [startISO, endISO]
       const periodExpenses = state.expenses
         .filter((e) => e.date >= bounds.startISO && e.date <= bounds.endISO)
         .sort((a, b) => b.date.localeCompare(a.date));
 
-      const spentByCategory = { grocery: 0, household: 0, other: 0 };
+      const spentByCategory = {};
+      state.categories.forEach((c) => {
+        spentByCategory[c.id] = 0;
+      });
+
       periodExpenses.forEach((e) => {
         if (spentByCategory[e.category] !== undefined) {
           spentByCategory[e.category] += Number(e.amount) || 0;
+        } else if (state.categories[0]) {
+          spentByCategory[state.categories[0].id] += Number(e.amount) || 0;
         }
       });
 
-      // Sum planned meal costs within [startISO, endISO]
       let plannedMealCost = 0;
       bounds.days.forEach((dayISO) => {
         const dayObj = state.meals[dayISO];
         if (dayObj) {
-          MEAL_SLOTS.forEach((slot) => {
+          state.mealSlots.forEach((slot) => {
             plannedMealCost += Number(dayObj[slot.id]?.cost) || 0;
           });
         }
       });
 
-      const totalSpent = spentByCategory.grocery + spentByCategory.household + spentByCategory.other;
-      const totalAssigned =
-        (Number(periodBudget.categories.grocery) || 0) +
-        (Number(periodBudget.categories.household) || 0) +
-        (Number(periodBudget.categories.other) || 0);
+      let totalSpent = 0;
+      let totalAssigned = 0;
+      state.categories.forEach((c) => {
+        totalSpent += spentByCategory[c.id] || 0;
+        totalAssigned += Number(periodBudget.categories[c.id]) || 0;
+      });
 
       return {
         bounds,
@@ -1499,23 +1950,24 @@
 
       // Top Warning Banner for Overflows
       const warnings = [];
-      CATEGORIES.forEach((cat) => {
+      state.categories.forEach((cat) => {
         const b = Number(periodBudget.categories[cat.id]) || 0;
         const s = spentByCategory[cat.id] || 0;
         if (s > b + 0.0001) {
-          warnings.push(`${cat.name} is over budget by ${formatPHP(s - b)} (Budget: ${formatPHP(b)}, Spent: ${formatPHP(s)})`);
+          warnings.push(`${escapeHtml(cat.name || "Category")} is over budget by ${formatPHP(s - b)} (Budget: ${formatPHP(b)}, Spent: ${formatPHP(s)})`);
         }
       });
 
-      const groceryBudget = Number(periodBudget.categories.grocery) || 0;
-      const groceryProjected = spentByCategory.grocery + plannedMealCost;
-      if (
-        spentByCategory.grocery <= groceryBudget + 0.0001 &&
-        groceryProjected > groceryBudget + 0.0001
-      ) {
-        warnings.push(
-          `Grocery Food projected spending (Spent + Planned Meals) exceeds budget by ${formatPHP(groceryProjected - groceryBudget)}`
-        );
+      const mealCat = state.categories.find((c) => c.id === state.mealCategoryId) || state.categories[0];
+      if (mealCat) {
+        const mealCatBudget = Number(periodBudget.categories[mealCat.id]) || 0;
+        const mealCatSpent = spentByCategory[mealCat.id] || 0;
+        const mealCatProjected = mealCatSpent + plannedMealCost;
+        if (mealCatSpent <= mealCatBudget + 0.0001 && mealCatProjected > mealCatBudget + 0.0001) {
+          warnings.push(
+            `${escapeHtml(mealCat.name)} projected spending (Spent + Planned Meals) exceeds budget by ${formatPHP(mealCatProjected - mealCatBudget)}`
+          );
+        }
       }
 
       if (totalSpent > periodBudget.allowance + 0.0001) {
@@ -1534,71 +1986,99 @@
         warningList.innerHTML = "";
       }
 
-      // Render Category Cards
+      // Render Customizable Category Cards
       const container = document.getElementById("categoriesContainer");
       if (rebuildCategoryInputs || container.children.length === 0) {
-        container.innerHTML = CATEGORIES.map((cat) => `
-          <div class="category-card" id="catCard_${cat.id}">
-            <div class="category-header">
-              <span class="category-name">${cat.name}</span>
-              <span id="catBadge_${cat.id}"></span>
-            </div>
-            <div>
-              <label for="catBudgetInput_${cat.id}">Category Budget (₱)</label>
+        container.innerHTML = state.categories.map((cat) => {
+          const isMealCat = cat.id === state.mealCategoryId;
+          const catBudgetVal = Number(periodBudget.categories[cat.id]) || 0;
+          return `
+            <div class="category-card" id="catCard_${cat.id}">
+              <div class="category-header">
+                <input
+                  id="catNameInput_${cat.id}"
+                  type="text"
+                  class="category-name-input"
+                  value="${escapeHtml(cat.name)}"
+                  title="Click to rename category"
+                  oninput="handleCategoryNameChange('${cat.id}', this.value)"
+                />
+                <div class="cat-actions-right">
+                  <span id="catBadge_${cat.id}"></span>
+                  ${state.categories.length > 1 ? `
+                    <button type="button" class="btn btn-sm btn-danger" title="Remove category" onclick="deleteCategory('${cat.id}')">&times;</button>
+                  ` : ""}
+                </div>
+              </div>
+
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <label for="catBudgetInput_${cat.id}" style="margin-bottom: 0;">Category Budget (₱)</label>
+                <button
+                  type="button"
+                  class="meal-link-btn ${isMealCat ? "active" : ""}"
+                  title="Link Planned Meal costs to this category"
+                  onclick="setMealLinkedCategory('${cat.id}')"
+                >
+                  ${isMealCat ? "🍲 Meal Plan Linked" : "Link Meal Plan"}
+                </button>
+              </div>
               <input
                 id="catBudgetInput_${cat.id}"
                 type="number"
                 min="0"
                 step="0.01"
-                value="${periodBudget.categories[cat.id]}"
+                value="${catBudgetVal}"
                 oninput="handleCategoryBudgetChange('${cat.id}', this.value)"
               />
-            </div>
-            <div class="cat-metrics">
-              <div class="cat-metric-row">
-                <div class="cat-metric-label">Budget</div>
-                <div class="cat-metric-val" id="catBudgetVal_${cat.id}">₱0.00</div>
-              </div>
-              <div class="cat-metric-row">
-                <div class="cat-metric-label">Spent</div>
-                <div class="cat-metric-val" id="catSpentVal_${cat.id}">₱0.00</div>
-              </div>
-              <div class="cat-metric-row">
-                <div class="cat-metric-label">Remaining</div>
-                <div class="cat-metric-val" id="catRemVal_${cat.id}">₱0.00</div>
-              </div>
-            </div>
-            ${cat.id === "grocery" ? `
-              <div class="planned-box">
-                <div class="planned-row">
-                  <span>Planned (Meal Plan):</span>
-                  <span id="groceryPlannedVal" class="text-planned">₱0.00</span>
+
+              <div class="cat-metrics">
+                <div class="cat-metric-row">
+                  <div class="cat-metric-label">Budget</div>
+                  <div class="cat-metric-val" id="catBudgetVal_${cat.id}">₱0.00</div>
                 </div>
-                <div class="planned-row">
-                  <span>Projected (Spent + Planned):</span>
-                  <span id="groceryProjectedVal">₱0.00</span>
+                <div class="cat-metric-row">
+                  <div class="cat-metric-label">Spent</div>
+                  <div class="cat-metric-val" id="catSpentVal_${cat.id}">₱0.00</div>
                 </div>
-                <div class="planned-row">
-                  <span>Projected Remaining:</span>
-                  <span id="groceryProjectedRemVal">₱0.00</span>
+                <div class="cat-metric-row">
+                  <div class="cat-metric-label">Remaining</div>
+                  <div class="cat-metric-val" id="catRemVal_${cat.id}">₱0.00</div>
                 </div>
               </div>
-            ` : ""}
-            <div>
-              <div class="progress-track">
-                <div id="catProgressFill_${cat.id}" class="progress-fill progress-green" style="width: 0%;"></div>
-              </div>
-              <div class="progress-caption" style="margin-top: 0.3rem;">
-                <span id="catPctLabel_${cat.id}">0% used</span>
-                <span id="catStatusText_${cat.id}">Within budget</span>
+
+              ${isMealCat ? `
+                <div class="planned-box">
+                  <div class="planned-row">
+                    <span>Planned (Meal Plan):</span>
+                    <span id="groceryPlannedVal" class="text-planned">₱0.00</span>
+                  </div>
+                  <div class="planned-row">
+                    <span>Projected (Spent + Planned):</span>
+                    <span id="groceryProjectedVal">₱0.00</span>
+                  </div>
+                  <div class="planned-row">
+                    <span>Projected Remaining:</span>
+                    <span id="groceryProjectedRemVal">₱0.00</span>
+                  </div>
+                </div>
+              ` : ""}
+
+              <div>
+                <div class="progress-track">
+                  <div id="catProgressFill_${cat.id}" class="progress-fill progress-green" style="width: 0%;"></div>
+                </div>
+                <div class="progress-caption" style="margin-top: 0.3rem;">
+                  <span id="catPctLabel_${cat.id}">0% used</span>
+                  <span id="catStatusText_${cat.id}">Within budget</span>
+                </div>
               </div>
             </div>
-          </div>
-        `).join("");
+          `;
+        }).join("");
       }
 
       // Update Category Values & Progress Bars
-      CATEGORIES.forEach((cat) => {
+      state.categories.forEach((cat) => {
         const budget = Number(periodBudget.categories[cat.id]) || 0;
         const spent = spentByCategory[cat.id] || 0;
         const remaining = budget - spent;
@@ -1615,13 +2095,14 @@
         const pctLabelEl = document.getElementById(`catPctLabel_${cat.id}`);
         const statusTextEl = document.getElementById(`catStatusText_${cat.id}`);
 
+        if (!cardEl) return;
+
         cardEl.classList.toggle("is-over", isOver);
         budgetValEl.textContent = formatPHP(budget);
         spentValEl.textContent = formatPHP(spent);
         remValEl.textContent = formatPHP(remaining);
         remValEl.className = isOver ? "cat-metric-val text-red" : "cat-metric-val";
 
-        // Progress color logic: green < 80%, yellow 80-100%, red > 100%
         fillEl.style.width = `${barWidth}%`;
         fillEl.classList.remove("progress-green", "progress-yellow", "progress-red");
         if (isOver || rawPct > 100) {
@@ -1643,24 +2124,26 @@
 
         pctLabelEl.textContent = budget > 0 ? `${Math.round(rawPct)}% of budget` : (spent > 0 ? "Over budget" : "0% of budget");
 
-        // Update Grocery Planned & Projected metrics
-        if (cat.id === "grocery") {
+        if (cat.id === state.mealCategoryId) {
           const projected = spent + plannedMealCost;
           const projectedRem = budget - projected;
           const isProjectedOver = projected > budget + 0.0001;
 
-          document.getElementById("groceryPlannedVal").textContent = formatPHP(plannedMealCost);
+          const plannedEl = document.getElementById("groceryPlannedVal");
           const projValEl = document.getElementById("groceryProjectedVal");
           const projRemEl = document.getElementById("groceryProjectedRemVal");
 
-          projValEl.textContent = formatPHP(projected);
-          projValEl.className = isProjectedOver ? "text-red" : "";
+          if (plannedEl && projValEl && projRemEl) {
+            plannedEl.textContent = formatPHP(plannedMealCost);
+            projValEl.textContent = formatPHP(projected);
+            projValEl.className = isProjectedOver ? "text-red" : "";
 
-          projRemEl.textContent = formatPHP(projectedRem);
-          projRemEl.className = isProjectedOver ? "text-red" : "text-green";
+            projRemEl.textContent = formatPHP(projectedRem);
+            projRemEl.className = isProjectedOver ? "text-red" : "text-green";
 
-          if (!isOver && isProjectedOver) {
-            badgeEl.innerHTML = `<span class="badge-projected-over">Projected Over</span>`;
+            if (!isOver && isProjectedOver) {
+              badgeEl.innerHTML = `<span class="badge-projected-over">Projected Over</span>`;
+            }
           }
         }
       });
@@ -1682,7 +2165,7 @@
 
       listEl.innerHTML = periodExpenses
         .map((exp) => {
-          const catName = CATEGORIES.find((c) => c.id === exp.category)?.name || exp.category;
+          const catName = state.categories.find((c) => c.id === exp.category)?.name || exp.category;
           const readableDate = parseDateISO(exp.date).toLocaleDateString("en-US", {
             month: "short",
             day: "numeric",
@@ -1723,16 +2206,16 @@
           });
           const dayMeals = state.meals[dateISO] || {};
           let dayTotal = 0;
-          MEAL_SLOTS.forEach((s) => {
+          state.mealSlots.forEach((s) => {
             dayTotal += Number(dayMeals[s.id]?.cost) || 0;
           });
 
-          const slotsHtml = MEAL_SLOTS.map((slot) => {
+          const slotsHtml = state.mealSlots.map((slot) => {
             const entry = dayMeals[slot.id] || { name: "", cost: "" };
             const costVal = entry.cost > 0 ? entry.cost : "";
             return `
               <div class="meal-slot">
-                <span class="meal-slot-label">${slot.label}</span>
+                <span class="meal-slot-label">${escapeHtml(slot.label)}</span>
                 <div class="meal-inputs">
                   <input
                     type="text"
@@ -1771,7 +2254,7 @@
       if (!el) return;
       const dayMeals = state.meals[dateISO] || {};
       let dayTotal = 0;
-      MEAL_SLOTS.forEach((s) => {
+      state.mealSlots.forEach((s) => {
         dayTotal += Number(dayMeals[s.id]?.cost) || 0;
       });
       el.textContent = formatPHP(dayTotal);
@@ -1829,9 +2312,13 @@
     }
 
     function renderAll() {
+      applyTheme();
+      renderCustomTitles();
       renderHeaderPeriod();
+      renderExpenseCategoryDropdown();
       renderSummaryAndCategories(true);
       renderExpenses();
+      renderMealSlotNamesBar();
       renderMealPlanner();
       renderGroceryList();
     }
