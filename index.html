@@ -1,0 +1,1844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meal &amp; Budget Planner</title>
+  <style>
+    /* =========================================================
+       1. THEME VARIABLES (Light & Dark Mode via Device Setting)
+       ========================================================= */
+    :root {
+      --bg: #f6f8fa;
+      --surface: #ffffff;
+      --surface-alt: #f0f3f6;
+      --border: #d8dee4;
+      --text: #1f2328;
+      --text-muted: #59636e;
+      --primary: #0f766e;
+      --primary-hover: #115e59;
+      --primary-soft: #ccfbf1;
+      --green: #15803d;
+      --green-bg: #dcfce7;
+      --yellow: #b45309;
+      --yellow-bg: #fef3c7;
+      --red: #dc2626;
+      --red-bg: #fee2e2;
+      --red-border: #f87171;
+      --planned: #2563eb;
+      --planned-bg: #dbeafe;
+      --shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+      --radius: 14px;
+      --radius-sm: 8px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0d1117;
+        --surface: #161b22;
+        --surface-alt: #21262d;
+        --border: #30363d;
+        --text: #e6edf3;
+        --text-muted: #8b949e;
+        --primary: #14b8a6;
+        --primary-hover: #2dd4bf;
+        --primary-soft: #134e4a;
+        --green: #22c55e;
+        --green-bg: rgba(34, 197, 94, 0.15);
+        --yellow: #f59e0b;
+        --yellow-bg: rgba(245, 158, 11, 0.15);
+        --red: #f87171;
+        --red-bg: rgba(248, 113, 113, 0.16);
+        --red-border: #ef4444;
+        --planned: #60a5fa;
+        --planned-bg: rgba(96, 165, 250, 0.16);
+        --shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+      }
+    }
+
+    /* =========================================================
+       2. BASE & MOBILE-FIRST LAYOUT STYLES
+       ========================================================= */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding-bottom: 3rem;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    /* =========================================================
+       3. HEADER & WARNING BANNER
+       ========================================================= */
+    header {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.1rem 1.25rem;
+      box-shadow: var(--shadow);
+    }
+
+    .header-top {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    h1 {
+      font-size: 1.4rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Period Selector Tabs */
+    .period-tabs {
+      display: inline-flex;
+      background: var(--surface-alt);
+      padding: 0.25rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+    }
+
+    .period-tab {
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding: 0.45rem 0.9rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .period-tab.active {
+      background: var(--primary);
+      color: #ffffff;
+    }
+
+    /* Date Navigation Bar */
+    .period-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--surface-alt);
+      padding: 0.55rem 0.75rem;
+      border-radius: var(--radius-sm);
+      gap: 0.5rem;
+    }
+
+    .period-nav-center {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .period-label {
+      font-size: 1.05rem;
+      font-weight: 700;
+    }
+
+    /* Overflow Warning Banner */
+    .warning-banner {
+      display: none;
+      background: var(--red-bg);
+      border: 2px solid var(--red-border);
+      color: var(--red);
+      border-radius: var(--radius);
+      padding: 0.9rem 1.1rem;
+      box-shadow: var(--shadow);
+    }
+
+    .warning-banner.visible {
+      display: block;
+    }
+
+    .warning-title {
+      font-weight: 800;
+      font-size: 1rem;
+      margin-bottom: 0.35rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .warning-list {
+      list-style: disc;
+      padding-left: 1.4rem;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    /* =========================================================
+       4. CARDS, BUTTONS & INPUTS
+       ========================================================= */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.2rem;
+      box-shadow: var(--shadow);
+    }
+
+    .section-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 0.9rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .btn {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-weight: 600;
+      font-size: 0.88rem;
+      padding: 0.45rem 0.85rem;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+    }
+
+    .btn:hover {
+      background: var(--surface-alt);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #ffffff;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+    }
+
+    .btn-danger {
+      color: var(--red);
+      border-color: var(--red-border);
+    }
+
+    .btn-danger:hover {
+      background: var(--red-bg);
+    }
+
+    .btn-sm {
+      padding: 0.28rem 0.6rem;
+      font-size: 0.8rem;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 0.55rem 0.7rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 0.95rem;
+      font-family: inherit;
+    }
+
+    input:focus, select:focus {
+      outline: 2px solid var(--primary);
+      border-color: transparent;
+    }
+
+    label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+
+    /* =========================================================
+       5. SUMMARY METRICS & CATEGORY CARDS
+       ========================================================= */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 0.85rem;
+    }
+
+    .stat-box {
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 0.9rem 1rem;
+    }
+
+    .stat-box.over-budget {
+      background: var(--red-bg);
+      border-color: var(--red-border);
+    }
+
+    .stat-label {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .stat-value {
+      font-size: 1.55rem;
+      font-weight: 800;
+      margin-top: 0.2rem;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .stat-sub {
+      font-size: 0.82rem;
+      margin-top: 0.25rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .text-red {
+      color: var(--red) !important;
+    }
+
+    .text-green {
+      color: var(--green) !important;
+    }
+
+    .text-planned {
+      color: var(--planned) !important;
+    }
+
+    .badge-over {
+      display: inline-block;
+      background: var(--red);
+      color: #ffffff;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.15rem 0.45rem;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      vertical-align: middle;
+      margin-left: 0.35rem;
+    }
+
+    .badge-projected-over {
+      display: inline-block;
+      background: var(--yellow);
+      color: #ffffff;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.15rem 0.45rem;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      vertical-align: middle;
+      margin-left: 0.35rem;
+    }
+
+    /* Allowance & Category Budget Config */
+    .allowance-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 0.9rem;
+      align-items: end;
+      margin-bottom: 1.1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .unassigned-box {
+      padding: 0.6rem 0.85rem;
+      border-radius: var(--radius-sm);
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.92rem;
+      font-weight: 600;
+    }
+
+    .categories-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+
+    .category-card {
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .category-card.is-over {
+      border-color: var(--red-border);
+      background: var(--red-bg);
+    }
+
+    .category-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .category-name {
+      font-weight: 700;
+      font-size: 1.02rem;
+    }
+
+    .cat-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem;
+      background: var(--surface);
+      padding: 0.65rem;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .cat-metric-label {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .cat-metric-val {
+      font-size: 0.98rem;
+      font-weight: 800;
+      margin-top: 0.1rem;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .planned-box {
+      background: var(--planned-bg);
+      border-radius: 6px;
+      padding: 0.55rem 0.75rem;
+      font-size: 0.84rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .planned-row {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 600;
+    }
+
+    /* Progress Bar */
+    .progress-track {
+      width: 100%;
+      height: 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.25s ease, background-color 0.25s ease;
+    }
+
+    .progress-green {
+      background-color: var(--green);
+    }
+
+    .progress-yellow {
+      background-color: var(--yellow);
+    }
+
+    .progress-red {
+      background-color: var(--red);
+    }
+
+    .progress-caption {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    /* =========================================================
+       6. EXPENSE TRACKER FORM & LIST
+       ========================================================= */
+    .expense-form {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 0.75rem;
+      align-items: end;
+      background: var(--surface-alt);
+      padding: 0.9rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      margin-bottom: 1rem;
+    }
+
+    .expense-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .expense-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 0.9rem;
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .expense-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+    }
+
+    .expense-title {
+      font-weight: 700;
+      font-size: 0.98rem;
+    }
+
+    .expense-meta {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .cat-pill {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 0.1rem 0.45rem;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 0.75rem;
+    }
+
+    .expense-right {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-left: auto;
+    }
+
+    .expense-amount {
+      font-size: 1.08rem;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .empty-state {
+      text-align: center;
+      color: var(--text-muted);
+      padding: 1.25rem;
+      font-size: 0.92rem;
+      background: var(--surface-alt);
+      border-radius: var(--radius-sm);
+      border: 1px dashed var(--border);
+    }
+
+    /* =========================================================
+       7. MEAL PLANNER & GROCERY LIST
+       ========================================================= */
+    .meal-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 0.85rem;
+      max-height: 540px;
+      overflow-y: auto;
+      padding-right: 0.25rem;
+    }
+
+    .day-card {
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 0.8rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+
+    .day-card.is-today {
+      border: 2px solid var(--primary);
+    }
+
+    .day-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 700;
+      font-size: 0.92rem;
+      padding-bottom: 0.35rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .day-total {
+      font-size: 0.82rem;
+      color: var(--planned);
+      font-weight: 700;
+    }
+
+    .meal-slot {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .meal-slot-label {
+      font-size: 0.73rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .meal-inputs {
+      display: grid;
+      grid-template-columns: 1fr 88px;
+      gap: 0.35rem;
+    }
+
+    .meal-inputs input {
+      padding: 0.38rem 0.5rem;
+      font-size: 0.85rem;
+    }
+
+    /* Grocery List */
+    .grocery-controls {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 0.85rem;
+      flex-wrap: wrap;
+    }
+
+    .grocery-add-row {
+      display: flex;
+      gap: 0.5rem;
+      flex: 1;
+      min-width: 240px;
+    }
+
+    .grocery-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+
+    .grocery-item {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+      padding: 0.5rem 0.75rem;
+      border-radius: var(--radius-sm);
+    }
+
+    .grocery-item.checked .grocery-text-input {
+      text-decoration: line-through;
+      color: var(--text-muted);
+    }
+
+    .grocery-checkbox {
+      width: 1.15rem;
+      height: 1.15rem;
+      cursor: pointer;
+      accent-color: var(--primary);
+    }
+
+    .grocery-text-input {
+      border: 1px solid transparent;
+      background: transparent;
+      flex: 1;
+      padding: 0.25rem 0.4rem;
+      font-size: 0.92rem;
+      font-weight: 500;
+    }
+
+    .grocery-text-input:focus {
+      background: var(--surface);
+      border-color: var(--border);
+    }
+
+    /* =========================================================
+       8. DATA / STORAGE FOOTER
+       ========================================================= */
+    .data-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      align-items: center;
+    }
+
+    .status-toast {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--primary);
+      margin-left: auto;
+    }
+
+    @media (max-width: 600px) {
+      .cat-metrics {
+        grid-template-columns: 1fr;
+        text-align: left;
+      }
+      .cat-metric-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .stat-value {
+        font-size: 1.35rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- =======================================================
+         1. HEADER & BUDGET PERIOD SELECTOR
+         ======================================================= -->
+    <header>
+      <div class="header-top">
+        <h1>🍲 Meal &amp; Budget Planner</h1>
+        <div class="period-tabs" role="tablist" aria-label="Budget Period">
+          <button type="button" class="period-tab" data-period="daily" onclick="setPeriodType('daily')">Daily</button>
+          <button type="button" class="period-tab" data-period="weekly" onclick="setPeriodType('weekly')">Weekly</button>
+          <button type="button" class="period-tab" data-period="monthly" onclick="setPeriodType('monthly')">Monthly</button>
+        </div>
+      </div>
+
+      <div class="period-nav">
+        <button type="button" class="btn btn-sm" onclick="shiftPeriod(-1)" aria-label="Previous period">&larr; Prev</button>
+        <div class="period-nav-center">
+          <span id="periodDateRange" class="period-label"></span>
+          <button type="button" class="btn btn-sm" onclick="resetToToday()">Today</button>
+        </div>
+        <button type="button" class="btn btn-sm" onclick="shiftPeriod(1)" aria-label="Next period">Next &rarr;</button>
+      </div>
+    </header>
+
+    <!-- =======================================================
+         2. TOP WARNING BANNER (Overflow Detection)
+         ======================================================= -->
+    <div id="warningBanner" class="warning-banner" role="alert" aria-live="polite">
+      <div class="warning-title">⚠️ Over Budget Alert</div>
+      <ul id="warningList" class="warning-list"></ul>
+    </div>
+
+    <!-- =======================================================
+         3. OVERALL SUMMARY CARD
+         ======================================================= -->
+    <section class="card" aria-label="Overall Budget Summary">
+      <div class="section-title">
+        <span>Overall Summary (<span id="summaryPeriodName">Weekly</span>)</span>
+      </div>
+      <div class="summary-grid">
+        <div class="stat-box">
+          <div class="stat-label">Total Allowance</div>
+          <div id="sumAllowance" class="stat-value">₱0.00</div>
+          <div id="sumUnassignedSub" class="stat-sub">Unassigned: ₱0.00</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Total Spent</div>
+          <div id="sumSpent" class="stat-value">₱0.00</div>
+          <div id="sumPlannedSub" class="stat-sub">Planned Meals: ₱0.00</div>
+        </div>
+        <div id="sumRemainingBox" class="stat-box">
+          <div class="stat-label">
+            Total Remaining
+            <span id="sumOverBadge" class="badge-over" style="display: none;">Over budget</span>
+          </div>
+          <div id="sumRemaining" class="stat-value">₱0.00</div>
+          <div id="sumProjectedSub" class="stat-sub">Projected (Spent + Planned): ₱0.00</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================
+         4. ALLOWANCE & CATEGORY BUDGETS + OVERFLOW PROGRESS
+         ======================================================= -->
+    <section class="card" aria-label="Allowance and Category Budgets">
+      <div class="section-title">
+        <span>Allowance &amp; Category Budgets</span>
+      </div>
+
+      <div class="allowance-bar">
+        <div>
+          <label for="allowanceInput">Total Allowance for <span id="allowancePeriodLabel">Weekly</span> Period (₱)</label>
+          <input
+            id="allowanceInput"
+            type="number"
+            min="0"
+            step="0.01"
+            placeholder="0.00"
+            oninput="handleAllowanceChange(this.value)"
+          />
+        </div>
+        <div class="unassigned-box">
+          <span>Unassigned Allowance:</span>
+          <strong id="unassignedAmount">₱0.00</strong>
+        </div>
+      </div>
+
+      <div id="categoriesContainer" class="categories-grid"></div>
+    </section>
+
+    <!-- =======================================================
+         5. EXPENSE TRACKING
+         ======================================================= -->
+    <section class="card" aria-label="Expense Tracking">
+      <div class="section-title">
+        <span>Expenses for Selected Period</span>
+        <span id="expenseCountLabel" style="font-size: 0.85rem; color: var(--text-muted);">0 items</span>
+      </div>
+
+      <form id="expenseForm" class="expense-form" onsubmit="handleExpenseSubmit(event)">
+        <input type="hidden" id="expenseEditId" value="" />
+        <div>
+          <label for="expenseDate">Date</label>
+          <input id="expenseDate" type="date" required />
+        </div>
+        <div>
+          <label for="expenseCategory">Category</label>
+          <select id="expenseCategory" required>
+            <option value="grocery">Grocery Food</option>
+            <option value="household">Household Supplies</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div>
+          <label for="expenseName">Item Name</label>
+          <input id="expenseName" type="text" placeholder="e.g. Chicken &amp; Vegetables" required />
+        </div>
+        <div>
+          <label for="expenseAmount">Amount (₱)</label>
+          <input id="expenseAmount" type="number" min="0.01" step="0.01" placeholder="0.00" required />
+        </div>
+        <div style="display: flex; gap: 0.4rem;">
+          <button type="submit" id="expenseSubmitBtn" class="btn btn-primary" style="flex: 1;">+ Add Expense</button>
+          <button type="button" id="expenseCancelBtn" class="btn" style="display: none;" onclick="cancelExpenseEdit()">Cancel</button>
+        </div>
+      </form>
+
+      <div id="expenseList" class="expense-list"></div>
+    </section>
+
+    <!-- =======================================================
+         6. MEAL PLANNER (Calendar-Style per Day)
+         ======================================================= -->
+    <section class="card" aria-label="Meal Planner">
+      <div class="section-title">
+        <span>Meal Planner (<span id="mealPlannerSummary" class="text-planned">Planned: ₱0.00</span>)</span>
+        <button type="button" class="btn btn-sm btn-primary" onclick="syncMealsToGroceryList()">
+          + Sync Meals to Grocery List
+        </button>
+      </div>
+      <p style="font-size: 0.86rem; color: var(--text-muted); margin-bottom: 0.85rem;">
+        Estimated meal costs count toward <strong>Grocery Food</strong> as <strong>Planned</strong> spending and update your <strong>Projected</strong> total (Spent + Planned).
+      </p>
+      <div id="mealGrid" class="meal-grid"></div>
+    </section>
+
+    <!-- =======================================================
+         7. GROCERY LIST (Generated from Meals, Editable)
+         ======================================================= -->
+    <section class="card" aria-label="Grocery List">
+      <div class="section-title">
+        <span>Grocery List</span>
+        <button type="button" class="btn btn-sm" onclick="clearCheckedGroceries()">Clear Checked</button>
+      </div>
+
+      <div class="grocery-controls">
+        <div class="grocery-add-row">
+          <input
+            id="newGroceryInput"
+            type="text"
+            placeholder="Add grocery item (or click Sync Meals above)..."
+            onkeydown="if(event.key==='Enter'){event.preventDefault();addManualGroceryItem();}"
+          />
+          <button type="button" class="btn btn-primary" onclick="addManualGroceryItem()">Add</button>
+        </div>
+      </div>
+
+      <div id="groceryListContainer" class="grocery-list"></div>
+    </section>
+
+    <!-- =======================================================
+         8. DATA & STORAGE (Export, Import, Reset)
+         ======================================================= -->
+    <section class="card" aria-label="Data and Storage">
+      <div class="section-title">
+        <span>Data &amp; Backup</span>
+      </div>
+      <div class="data-actions">
+        <button type="button" class="btn" onclick="exportDataJson()">⬇ Export to JSON</button>
+        <label class="btn" style="margin-bottom: 0; cursor: pointer;">
+          ⬆ Import from JSON
+          <input type="file" id="importJsonInput" accept=".json,application/json" style="display: none;" onchange="importDataJson(event)" />
+        </label>
+        <button type="button" class="btn btn-danger" onclick="resetAllData()">🗑 Reset All Data</button>
+        <span id="storageToast" class="status-toast">Saved in browser</span>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    /* =========================================================
+       1. CONSTANTS & DEFAULT STATE
+       ========================================================= */
+    const STORAGE_KEY = "meal_budget_planner_v1";
+
+    const CATEGORIES = [
+      { id: "grocery", name: "Grocery Food" },
+      { id: "household", name: "Household Supplies" },
+      { id: "other", name: "Other" }
+    ];
+
+    const MEAL_SLOTS = [
+      { id: "breakfast", label: "Breakfast" },
+      { id: "lunch", label: "Lunch" },
+      { id: "dinner", label: "Dinner" },
+      { id: "snack", label: "Snack" }
+    ];
+
+    function getTodayISO() {
+      const now = new Date();
+      return formatDateISO(now);
+    }
+
+    function formatDateISO(dateObj) {
+      const y = dateObj.getFullYear();
+      const m = String(dateObj.getMonth() + 1).padStart(2, "0");
+      const d = String(dateObj.getDate()).padStart(2, "0");
+      return `${y}-${m}-${d}`;
+    }
+
+    function parseDateISO(isoStr) {
+      const [y, m, d] = isoStr.split("-").map(Number);
+      return new Date(y, m - 1, d);
+    }
+
+    function createDefaultState() {
+      return {
+        periodType: "weekly",
+        anchorDate: getTodayISO(),
+        budgets: {
+          daily: { allowance: 500, categories: { grocery: 300, household: 100, other: 100 } },
+          weekly: { allowance: 3500, categories: { grocery: 2000, household: 800, other: 500 } },
+          monthly: { allowance: 15000, categories: { grocery: 9000, household: 3500, other: 2000 } }
+        },
+        expenses: [],
+        meals: {}, // keyed by "YYYY-MM-DD": { breakfast: { name, cost }, lunch: ..., dinner: ..., snack: ... }
+        groceryList: [] // [{ id, text, checked, sourceMealKey }]
+      };
+    }
+
+    let state = loadState();
+
+    /* =========================================================
+       2. LOCAL STORAGE & CURRENCY FORMATTING
+       ========================================================= */
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return createDefaultState();
+        const parsed = JSON.parse(raw);
+        const def = createDefaultState();
+        return {
+          periodType: ["daily", "weekly", "monthly"].includes(parsed.periodType) ? parsed.periodType : def.periodType,
+          anchorDate: parsed.anchorDate || def.anchorDate,
+          budgets: {
+            daily: { ...def.budgets.daily, ...(parsed.budgets?.daily || {}), categories: { ...def.budgets.daily.categories, ...(parsed.budgets?.daily?.categories || {}) } },
+            weekly: { ...def.budgets.weekly, ...(parsed.budgets?.weekly || {}), categories: { ...def.budgets.weekly.categories, ...(parsed.budgets?.weekly?.categories || {}) } },
+            monthly: { ...def.budgets.monthly, ...(parsed.budgets?.monthly || {}), categories: { ...def.budgets.monthly.categories, ...(parsed.budgets?.monthly?.categories || {}) } }
+          },
+          expenses: Array.isArray(parsed.expenses) ? parsed.expenses : [],
+          meals: parsed.meals && typeof parsed.meals === "object" ? parsed.meals : {},
+          groceryList: Array.isArray(parsed.groceryList) ? parsed.groceryList : []
+        };
+      } catch (e) {
+        return createDefaultState();
+      }
+    }
+
+    function saveState(toastMsg) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      const toast = document.getElementById("storageToast");
+      if (toast && toastMsg) {
+        toast.textContent = toastMsg;
+      }
+    }
+
+    // Formats number as ₱1,234.56 or −₱350.00 when negative
+    function formatPHP(amount) {
+      const num = Number(amount) || 0;
+      const isNegative = num < -0.0001;
+      const absVal = Math.abs(num);
+      const formatted = absVal.toLocaleString("en-PH", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+      return isNegative ? `−₱${formatted}` : `₱${formatted}`;
+    }
+
+    /* =========================================================
+       3. PERIOD DATE RANGE CALCULATIONS
+       ========================================================= */
+    function getPeriodBounds(periodType, anchorISO) {
+      const anchor = parseDateISO(anchorISO);
+      let start, end;
+
+      if (periodType === "daily") {
+        start = new Date(anchor);
+        end = new Date(anchor);
+      } else if (periodType === "weekly") {
+        // Week starts on Monday (ISO) and ends on Sunday
+        const day = anchor.getDay(); // 0 = Sun, 1 = Mon, ...
+        const diffToMon = day === 0 ? -6 : 1 - day;
+        start = new Date(anchor);
+        start.setDate(anchor.getDate() + diffToMon);
+        end = new Date(start);
+        end.setDate(start.getDate() + 6);
+      } else {
+        // Monthly: 1st to last day of month
+        start = new Date(anchor.getFullYear(), anchor.getMonth(), 1);
+        end = new Date(anchor.getFullYear(), anchor.getMonth() + 1, 0);
+      }
+
+      const days = [];
+      const cursor = new Date(start);
+      while (cursor <= end) {
+        days.push(formatDateISO(cursor));
+        cursor.setDate(cursor.getDate() + 1);
+      }
+
+      return {
+        startISO: formatDateISO(start),
+        endISO: formatDateISO(end),
+        startDate: start,
+        endDate: end,
+        days
+      };
+    }
+
+    function formatPeriodRangeLabel(periodType, startDate, endDate) {
+      const shortMonthDay = (d) =>
+        d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+
+      if (periodType === "daily") {
+        return startDate.toLocaleDateString("en-US", {
+          weekday: "short",
+          month: "short",
+          day: "numeric",
+          year: "numeric"
+        });
+      }
+      if (periodType === "weekly") {
+        const sameYear = startDate.getFullYear() === endDate.getFullYear();
+        return `${shortMonthDay(startDate)} – ${shortMonthDay(endDate)}${sameYear ? `, ${endDate.getFullYear()}` : ""}`;
+      }
+      // Monthly
+      return `${shortMonthDay(startDate)} – ${shortMonthDay(endDate)}, ${startDate.getFullYear()}`;
+    }
+
+    function setPeriodType(newPeriod) {
+      state.periodType = newPeriod;
+      saveState("Period updated");
+      syncDefaultExpenseDate();
+      renderAll();
+    }
+
+    function shiftPeriod(direction) {
+      const d = parseDateISO(state.anchorDate);
+      if (state.periodType === "daily") {
+        d.setDate(d.getDate() + direction);
+      } else if (state.periodType === "weekly") {
+        d.setDate(d.getDate() + direction * 7);
+      } else {
+        d.setMonth(d.getMonth() + direction);
+      }
+      state.anchorDate = formatDateISO(d);
+      saveState("Date range updated");
+      syncDefaultExpenseDate();
+      renderAll();
+    }
+
+    function resetToToday() {
+      state.anchorDate = getTodayISO();
+      saveState("Jumped to today");
+      syncDefaultExpenseDate();
+      renderAll();
+    }
+
+    function syncDefaultExpenseDate() {
+      const expenseEditId = document.getElementById("expenseEditId").value;
+      if (expenseEditId) return; // Don't overwrite date while editing an existing item
+      const bounds = getPeriodBounds(state.periodType, state.anchorDate);
+      const today = getTodayISO();
+      const dateInput = document.getElementById("expenseDate");
+      if (today >= bounds.startISO && today <= bounds.endISO) {
+        dateInput.value = today;
+      } else {
+        dateInput.value = bounds.startISO;
+      }
+    }
+
+    /* =========================================================
+       4. ALLOWANCE & CATEGORY BUDGET HANDLERS
+       ========================================================= */
+    function handleAllowanceChange(val) {
+      const num = Math.max(0, parseFloat(val) || 0);
+      state.budgets[state.periodType].allowance = num;
+      saveState("Allowance saved");
+      renderSummaryAndCategories(false);
+    }
+
+    function handleCategoryBudgetChange(catId, val) {
+      const num = Math.max(0, parseFloat(val) || 0);
+      state.budgets[state.periodType].categories[catId] = num;
+      saveState("Category budget saved");
+      renderSummaryAndCategories(false);
+    }
+
+    /* =========================================================
+       5. EXPENSE CRUD HANDLERS
+       ========================================================= */
+    function handleExpenseSubmit(event) {
+      event.preventDefault();
+      const editId = document.getElementById("expenseEditId").value;
+      const date = document.getElementById("expenseDate").value;
+      const category = document.getElementById("expenseCategory").value;
+      const name = document.getElementById("expenseName").value.trim();
+      const amount = parseFloat(document.getElementById("expenseAmount").value);
+
+      if (!date || !name || isNaN(amount) || amount <= 0) return;
+
+      if (editId) {
+        const idx = state.expenses.findIndex((e) => e.id === editId);
+        if (idx !== -1) {
+          state.expenses[idx] = { id: editId, date, category, name, amount };
+        }
+        cancelExpenseEdit();
+        saveState("Expense updated");
+      } else {
+        state.expenses.push({
+          id: "exp_" + Date.now() + "_" + Math.random().toString(36).slice(2, 6),
+          date,
+          category,
+          name,
+          amount
+        });
+        document.getElementById("expenseName").value = "";
+        document.getElementById("expenseAmount").value = "";
+        saveState("Expense added");
+      }
+
+      renderAll();
+    }
+
+    function startExpenseEdit(id) {
+      const exp = state.expenses.find((e) => e.id === id);
+      if (!exp) return;
+      document.getElementById("expenseEditId").value = exp.id;
+      document.getElementById("expenseDate").value = exp.date;
+      document.getElementById("expenseCategory").value = exp.category;
+      document.getElementById("expenseName").value = exp.name;
+      document.getElementById("expenseAmount").value = exp.amount;
+      document.getElementById("expenseSubmitBtn").textContent = "Save Changes";
+      document.getElementById("expenseCancelBtn").style.display = "inline-flex";
+      document.getElementById("expenseName").focus();
+    }
+
+    function cancelExpenseEdit() {
+      document.getElementById("expenseEditId").value = "";
+      document.getElementById("expenseName").value = "";
+      document.getElementById("expenseAmount").value = "";
+      document.getElementById("expenseSubmitBtn").textContent = "+ Add Expense";
+      document.getElementById("expenseCancelBtn").style.display = "none";
+      syncDefaultExpenseDate();
+    }
+
+    function deleteExpense(id) {
+      state.expenses = state.expenses.filter((e) => e.id !== id);
+      if (document.getElementById("expenseEditId").value === id) {
+        cancelExpenseEdit();
+      }
+      saveState("Expense deleted");
+      renderAll();
+    }
+
+    /* =========================================================
+       6. MEAL PLANNER & GROCERY LIST HANDLERS
+       ========================================================= */
+    function handleMealChange(dateISO, slotId, field, value) {
+      if (!state.meals[dateISO]) {
+        state.meals[dateISO] = {};
+      }
+      if (!state.meals[dateISO][slotId]) {
+        state.meals[dateISO][slotId] = { name: "", cost: 0 };
+      }
+
+      if (field === "name") {
+        state.meals[dateISO][slotId].name = value;
+        autoSyncSingleMealToGrocery(dateISO, slotId, value.trim());
+      } else if (field === "cost") {
+        state.meals[dateISO][slotId].cost = Math.max(0, parseFloat(value) || 0);
+      }
+
+      saveState("Meal plan saved");
+      renderSummaryAndCategories(false);
+      updateDayTotalDisplay(dateISO);
+      renderGroceryList();
+    }
+
+    function autoSyncSingleMealToGrocery(dateISO, slotId, mealName) {
+      const mealKey = `${dateISO}_${slotId}`;
+      const existingIdx = state.groceryList.findIndex((g) => g.sourceMealKey === mealKey);
+
+      if (!mealName) {
+        if (existingIdx !== -1 && !state.groceryList[existingIdx].checked) {
+          state.groceryList.splice(existingIdx, 1);
+        }
+        return;
+      }
+
+      const shortDate = parseDateISO(dateISO).toLocaleDateString("en-US", { month: "short", day: "numeric" });
+      const slotLabel = MEAL_SLOTS.find((s) => s.id === slotId)?.label || slotId;
+      const formattedText = `${mealName} (${shortDate} ${slotLabel})`;
+
+      if (existingIdx !== -1) {
+        state.groceryList[existingIdx].text = formattedText;
+      } else {
+        state.groceryList.push({
+          id: "groc_" + Date.now() + "_" + Math.random().toString(36).slice(2, 6),
+          text: formattedText,
+          checked: false,
+          sourceMealKey: mealKey
+        });
+      }
+    }
+
+    function syncMealsToGroceryList() {
+      const bounds = getPeriodBounds(state.periodType, state.anchorDate);
+      let addedCount = 0;
+
+      bounds.days.forEach((dateISO) => {
+        const dayMeals = state.meals[dateISO] || {};
+        MEAL_SLOTS.forEach((slot) => {
+          const entry = dayMeals[slot.id];
+          if (entry && entry.name && entry.name.trim()) {
+            const mealKey = `${dateISO}_${slot.id}`;
+            const exists = state.groceryList.some((g) => g.sourceMealKey === mealKey);
+            if (!exists) {
+              const shortDate = parseDateISO(dateISO).toLocaleDateString("en-US", { month: "short", day: "numeric" });
+              state.groceryList.push({
+                id: "groc_" + Date.now() + "_" + Math.random().toString(36).slice(2, 6),
+                text: `${entry.name.trim()} (${shortDate} ${slot.label})`,
+                checked: false,
+                sourceMealKey: mealKey
+              });
+              addedCount++;
+            }
+          }
+        });
+      });
+
+      saveState(addedCount > 0 ? `Synced ${addedCount} meal(s) to grocery list` : "Grocery list already up to date");
+      renderGroceryList();
+    }
+
+    function addManualGroceryItem() {
+      const input = document.getElementById("newGroceryInput");
+      const text = input.value.trim();
+      if (!text) return;
+
+      state.groceryList.push({
+        id: "groc_" + Date.now() + "_" + Math.random().toString(36).slice(2, 6),
+        text,
+        checked: false,
+        sourceMealKey: null
+      });
+      input.value = "";
+      saveState("Grocery item added");
+      renderGroceryList();
+    }
+
+    function toggleGroceryItem(id) {
+      const item = state.groceryList.find((g) => g.id === id);
+      if (!item) return;
+      item.checked = !item.checked;
+      saveState("Grocery item updated");
+      renderGroceryList();
+    }
+
+    function editGroceryItemText(id, newText) {
+      const item = state.groceryList.find((g) => g.id === id);
+      if (!item) return;
+      item.text = newText;
+      saveState("Grocery item edited");
+    }
+
+    function deleteGroceryItem(id) {
+      state.groceryList = state.groceryList.filter((g) => g.id !== id);
+      saveState("Grocery item removed");
+      renderGroceryList();
+    }
+
+    function clearCheckedGroceries() {
+      state.groceryList = state.groceryList.filter((g) => !g.checked);
+      saveState("Cleared checked items");
+      renderGroceryList();
+    }
+
+    /* =========================================================
+       7. EXPORT, IMPORT & RESET DATA
+       ========================================================= */
+    function exportDataJson() {
+      const dataStr = JSON.stringify(state, null, 2);
+      const blob = new Blob([dataStr], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `meal-budget-planner-${getTodayISO()}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      saveState("Exported JSON");
+    }
+
+    function importDataJson(event) {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const imported = JSON.parse(e.target.result);
+          if (!imported || typeof imported !== "object" || !imported.budgets) {
+            alert("Invalid backup JSON file.");
+            return;
+          }
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(imported));
+          state = loadState();
+          syncDefaultExpenseDate();
+          renderAll();
+          saveState("Imported JSON successfully");
+        } catch (err) {
+          alert("Could not parse JSON file.");
+        } finally {
+          event.target.value = "";
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function resetAllData() {
+      const confirmed = window.confirm(
+        "Are you sure you want to reset all budgets, expenses, meal plans, and grocery items? This cannot be undone."
+      );
+      if (!confirmed) return;
+      localStorage.removeItem(STORAGE_KEY);
+      state = createDefaultState();
+      cancelExpenseEdit();
+      syncDefaultExpenseDate();
+      renderAll();
+      saveState("All data reset");
+    }
+
+    /* =========================================================
+       8. RENDERING FUNCTIONS
+       ========================================================= */
+    function getPeriodCalculations() {
+      const bounds = getPeriodBounds(state.periodType, state.anchorDate);
+      const periodBudget = state.budgets[state.periodType];
+
+      // Filter expenses within [startISO, endISO]
+      const periodExpenses = state.expenses
+        .filter((e) => e.date >= bounds.startISO && e.date <= bounds.endISO)
+        .sort((a, b) => b.date.localeCompare(a.date));
+
+      const spentByCategory = { grocery: 0, household: 0, other: 0 };
+      periodExpenses.forEach((e) => {
+        if (spentByCategory[e.category] !== undefined) {
+          spentByCategory[e.category] += Number(e.amount) || 0;
+        }
+      });
+
+      // Sum planned meal costs within [startISO, endISO]
+      let plannedMealCost = 0;
+      bounds.days.forEach((dayISO) => {
+        const dayObj = state.meals[dayISO];
+        if (dayObj) {
+          MEAL_SLOTS.forEach((slot) => {
+            plannedMealCost += Number(dayObj[slot.id]?.cost) || 0;
+          });
+        }
+      });
+
+      const totalSpent = spentByCategory.grocery + spentByCategory.household + spentByCategory.other;
+      const totalAssigned =
+        (Number(periodBudget.categories.grocery) || 0) +
+        (Number(periodBudget.categories.household) || 0) +
+        (Number(periodBudget.categories.other) || 0);
+
+      return {
+        bounds,
+        periodBudget,
+        periodExpenses,
+        spentByCategory,
+        plannedMealCost,
+        totalSpent,
+        totalAssigned
+      };
+    }
+
+    function renderSummaryAndCategories(rebuildCategoryInputs = true) {
+      const calc = getPeriodCalculations();
+      const { periodBudget, spentByCategory, plannedMealCost, totalSpent, totalAssigned } = calc;
+
+      const capPeriod = state.periodType.charAt(0).toUpperCase() + state.periodType.slice(1);
+      document.getElementById("summaryPeriodName").textContent = capPeriod;
+      document.getElementById("allowancePeriodLabel").textContent = capPeriod;
+
+      const allowanceInput = document.getElementById("allowanceInput");
+      if (document.activeElement !== allowanceInput) {
+        allowanceInput.value = periodBudget.allowance;
+      }
+
+      const unassigned = periodBudget.allowance - totalAssigned;
+      const unassignedEl = document.getElementById("unassignedAmount");
+      unassignedEl.textContent = formatPHP(unassigned);
+      unassignedEl.className = unassigned < -0.0001 ? "text-red" : "";
+
+      // Summary Boxes
+      const totalRemaining = periodBudget.allowance - totalSpent;
+      const totalProjected = totalSpent + plannedMealCost;
+
+      document.getElementById("sumAllowance").textContent = formatPHP(periodBudget.allowance);
+      document.getElementById("sumUnassignedSub").textContent =
+        unassigned < -0.0001
+          ? `Over-assigned by ${formatPHP(Math.abs(unassigned))}`
+          : `Unassigned to categories: ${formatPHP(unassigned)}`;
+      document.getElementById("sumUnassignedSub").className =
+        unassigned < -0.0001 ? "stat-sub text-red" : "stat-sub";
+
+      document.getElementById("sumSpent").textContent = formatPHP(totalSpent);
+      document.getElementById("sumPlannedSub").textContent = `Planned Meals: ${formatPHP(plannedMealCost)}`;
+
+      const sumRemainingEl = document.getElementById("sumRemaining");
+      const sumRemainingBox = document.getElementById("sumRemainingBox");
+      const sumOverBadge = document.getElementById("sumOverBadge");
+
+      sumRemainingEl.textContent = formatPHP(totalRemaining);
+      if (totalRemaining < -0.0001) {
+        sumRemainingEl.className = "stat-value text-red";
+        sumRemainingBox.classList.add("over-budget");
+        sumOverBadge.style.display = "inline-block";
+      } else {
+        sumRemainingEl.className = "stat-value";
+        sumRemainingBox.classList.remove("over-budget");
+        sumOverBadge.style.display = "none";
+      }
+
+      const projectedSub = document.getElementById("sumProjectedSub");
+      projectedSub.textContent = `Projected (Spent + Planned): ${formatPHP(totalProjected)}`;
+      projectedSub.className =
+        totalProjected > periodBudget.allowance + 0.0001 ? "stat-sub text-red" : "stat-sub";
+
+      // Top Warning Banner for Overflows
+      const warnings = [];
+      CATEGORIES.forEach((cat) => {
+        const b = Number(periodBudget.categories[cat.id]) || 0;
+        const s = spentByCategory[cat.id] || 0;
+        if (s > b + 0.0001) {
+          warnings.push(`${cat.name} is over budget by ${formatPHP(s - b)} (Budget: ${formatPHP(b)}, Spent: ${formatPHP(s)})`);
+        }
+      });
+
+      const groceryBudget = Number(periodBudget.categories.grocery) || 0;
+      const groceryProjected = spentByCategory.grocery + plannedMealCost;
+      if (
+        spentByCategory.grocery <= groceryBudget + 0.0001 &&
+        groceryProjected > groceryBudget + 0.0001
+      ) {
+        warnings.push(
+          `Grocery Food projected spending (Spent + Planned Meals) exceeds budget by ${formatPHP(groceryProjected - groceryBudget)}`
+        );
+      }
+
+      if (totalSpent > periodBudget.allowance + 0.0001) {
+        warnings.push(
+          `Total Spending exceeds your ${capPeriod} Allowance by ${formatPHP(totalSpent - periodBudget.allowance)}`
+        );
+      }
+
+      const warningBanner = document.getElementById("warningBanner");
+      const warningList = document.getElementById("warningList");
+      if (warnings.length > 0) {
+        warningList.innerHTML = warnings.map((w) => `<li>${w}</li>`).join("");
+        warningBanner.classList.add("visible");
+      } else {
+        warningBanner.classList.remove("visible");
+        warningList.innerHTML = "";
+      }
+
+      // Render Category Cards
+      const container = document.getElementById("categoriesContainer");
+      if (rebuildCategoryInputs || container.children.length === 0) {
+        container.innerHTML = CATEGORIES.map((cat) => `
+          <div class="category-card" id="catCard_${cat.id}">
+            <div class="category-header">
+              <span class="category-name">${cat.name}</span>
+              <span id="catBadge_${cat.id}"></span>
+            </div>
+            <div>
+              <label for="catBudgetInput_${cat.id}">Category Budget (₱)</label>
+              <input
+                id="catBudgetInput_${cat.id}"
+                type="number"
+                min="0"
+                step="0.01"
+                value="${periodBudget.categories[cat.id]}"
+                oninput="handleCategoryBudgetChange('${cat.id}', this.value)"
+              />
+            </div>
+            <div class="cat-metrics">
+              <div class="cat-metric-row">
+                <div class="cat-metric-label">Budget</div>
+                <div class="cat-metric-val" id="catBudgetVal_${cat.id}">₱0.00</div>
+              </div>
+              <div class="cat-metric-row">
+                <div class="cat-metric-label">Spent</div>
+                <div class="cat-metric-val" id="catSpentVal_${cat.id}">₱0.00</div>
+              </div>
+              <div class="cat-metric-row">
+                <div class="cat-metric-label">Remaining</div>
+                <div class="cat-metric-val" id="catRemVal_${cat.id}">₱0.00</div>
+              </div>
+            </div>
+            ${cat.id === "grocery" ? `
+              <div class="planned-box">
+                <div class="planned-row">
+                  <span>Planned (Meal Plan):</span>
+                  <span id="groceryPlannedVal" class="text-planned">₱0.00</span>
+                </div>
+                <div class="planned-row">
+                  <span>Projected (Spent + Planned):</span>
+                  <span id="groceryProjectedVal">₱0.00</span>
+                </div>
+                <div class="planned-row">
+                  <span>Projected Remaining:</span>
+                  <span id="groceryProjectedRemVal">₱0.00</span>
+                </div>
+              </div>
+            ` : ""}
+            <div>
+              <div class="progress-track">
+                <div id="catProgressFill_${cat.id}" class="progress-fill progress-green" style="width: 0%;"></div>
+              </div>
+              <div class="progress-caption" style="margin-top: 0.3rem;">
+                <span id="catPctLabel_${cat.id}">0% used</span>
+                <span id="catStatusText_${cat.id}">Within budget</span>
+              </div>
+            </div>
+          </div>
+        `).join("");
+      }
+
+      // Update Category Values & Progress Bars
+      CATEGORIES.forEach((cat) => {
+        const budget = Number(periodBudget.categories[cat.id]) || 0;
+        const spent = spentByCategory[cat.id] || 0;
+        const remaining = budget - spent;
+        const isOver = spent > budget + 0.0001;
+        const rawPct = budget > 0 ? (spent / budget) * 100 : (spent > 0 ? 101 : 0);
+        const barWidth = Math.min(100, Math.max(0, rawPct));
+
+        const cardEl = document.getElementById(`catCard_${cat.id}`);
+        const badgeEl = document.getElementById(`catBadge_${cat.id}`);
+        const budgetValEl = document.getElementById(`catBudgetVal_${cat.id}`);
+        const spentValEl = document.getElementById(`catSpentVal_${cat.id}`);
+        const remValEl = document.getElementById(`catRemVal_${cat.id}`);
+        const fillEl = document.getElementById(`catProgressFill_${cat.id}`);
+        const pctLabelEl = document.getElementById(`catPctLabel_${cat.id}`);
+        const statusTextEl = document.getElementById(`catStatusText_${cat.id}`);
+
+        cardEl.classList.toggle("is-over", isOver);
+        budgetValEl.textContent = formatPHP(budget);
+        spentValEl.textContent = formatPHP(spent);
+        remValEl.textContent = formatPHP(remaining);
+        remValEl.className = isOver ? "cat-metric-val text-red" : "cat-metric-val";
+
+        // Progress color logic: green < 80%, yellow 80-100%, red > 100%
+        fillEl.style.width = `${barWidth}%`;
+        fillEl.classList.remove("progress-green", "progress-yellow", "progress-red");
+        if (isOver || rawPct > 100) {
+          fillEl.classList.add("progress-red");
+          badgeEl.innerHTML = `<span class="badge-over">Over budget</span>`;
+          statusTextEl.textContent = `Over by ${formatPHP(spent - budget)}`;
+          statusTextEl.className = "text-red";
+        } else if (rawPct >= 80) {
+          fillEl.classList.add("progress-yellow");
+          badgeEl.innerHTML = "";
+          statusTextEl.textContent = "Near limit (80–100%)";
+          statusTextEl.className = "";
+        } else {
+          fillEl.classList.add("progress-green");
+          badgeEl.innerHTML = "";
+          statusTextEl.textContent = "Under 80%";
+          statusTextEl.className = "";
+        }
+
+        pctLabelEl.textContent = budget > 0 ? `${Math.round(rawPct)}% of budget` : (spent > 0 ? "Over budget" : "0% of budget");
+
+        // Update Grocery Planned & Projected metrics
+        if (cat.id === "grocery") {
+          const projected = spent + plannedMealCost;
+          const projectedRem = budget - projected;
+          const isProjectedOver = projected > budget + 0.0001;
+
+          document.getElementById("groceryPlannedVal").textContent = formatPHP(plannedMealCost);
+          const projValEl = document.getElementById("groceryProjectedVal");
+          const projRemEl = document.getElementById("groceryProjectedRemVal");
+
+          projValEl.textContent = formatPHP(projected);
+          projValEl.className = isProjectedOver ? "text-red" : "";
+
+          projRemEl.textContent = formatPHP(projectedRem);
+          projRemEl.className = isProjectedOver ? "text-red" : "text-green";
+
+          if (!isOver && isProjectedOver) {
+            badgeEl.innerHTML = `<span class="badge-projected-over">Projected Over</span>`;
+          }
+        }
+      });
+
+      document.getElementById("mealPlannerSummary").textContent = `Planned: ${formatPHP(plannedMealCost)}`;
+    }
+
+    function renderExpenses() {
+      const { periodExpenses } = getPeriodCalculations();
+      const listEl = document.getElementById("expenseList");
+      const countEl = document.getElementById("expenseCountLabel");
+
+      countEl.textContent = `${periodExpenses.length} ${periodExpenses.length === 1 ? "item" : "items"}`;
+
+      if (periodExpenses.length === 0) {
+        listEl.innerHTML = `<div class="empty-state">No expenses recorded for this period yet. Add one above!</div>`;
+        return;
+      }
+
+      listEl.innerHTML = periodExpenses
+        .map((exp) => {
+          const catName = CATEGORIES.find((c) => c.id === exp.category)?.name || exp.category;
+          const readableDate = parseDateISO(exp.date).toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+            year: "numeric"
+          });
+          return `
+            <div class="expense-item">
+              <div class="expense-info">
+                <div class="expense-title">${escapeHtml(exp.name)}</div>
+                <div class="expense-meta">
+                  <span>📅 ${readableDate}</span>
+                  <span class="cat-pill">${escapeHtml(catName)}</span>
+                </div>
+              </div>
+              <div class="expense-right">
+                <span class="expense-amount">${formatPHP(exp.amount)}</span>
+                <button type="button" class="btn btn-sm" onclick="startExpenseEdit('${exp.id}')">Edit</button>
+                <button type="button" class="btn btn-sm btn-danger" onclick="deleteExpense('${exp.id}')">Delete</button>
+              </div>
+            </div>
+          `;
+        })
+        .join("");
+    }
+
+    function renderMealPlanner() {
+      const bounds = getPeriodBounds(state.periodType, state.anchorDate);
+      const gridEl = document.getElementById("mealGrid");
+      const todayISO = getTodayISO();
+
+      gridEl.innerHTML = bounds.days
+        .map((dateISO) => {
+          const d = parseDateISO(dateISO);
+          const dayLabel = d.toLocaleDateString("en-US", {
+            weekday: "short",
+            month: "short",
+            day: "numeric"
+          });
+          const dayMeals = state.meals[dateISO] || {};
+          let dayTotal = 0;
+          MEAL_SLOTS.forEach((s) => {
+            dayTotal += Number(dayMeals[s.id]?.cost) || 0;
+          });
+
+          const slotsHtml = MEAL_SLOTS.map((slot) => {
+            const entry = dayMeals[slot.id] || { name: "", cost: "" };
+            const costVal = entry.cost > 0 ? entry.cost : "";
+            return `
+              <div class="meal-slot">
+                <span class="meal-slot-label">${slot.label}</span>
+                <div class="meal-inputs">
+                  <input
+                    type="text"
+                    placeholder="Meal name..."
+                    value="${escapeHtml(entry.name || "")}"
+                    oninput="handleMealChange('${dateISO}', '${slot.id}', 'name', this.value)"
+                  />
+                  <input
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    placeholder="₱ Cost"
+                    value="${costVal}"
+                    oninput="handleMealChange('${dateISO}', '${slot.id}', 'cost', this.value)"
+                  />
+                </div>
+              </div>
+            `;
+          }).join("");
+
+          return `
+            <div class="day-card ${dateISO === todayISO ? "is-today" : ""}">
+              <div class="day-header">
+                <span>${dayLabel}</span>
+                <span class="day-total" id="dayTotal_${dateISO}">${formatPHP(dayTotal)}</span>
+              </div>
+              ${slotsHtml}
+            </div>
+          `;
+        })
+        .join("");
+    }
+
+    function updateDayTotalDisplay(dateISO) {
+      const el = document.getElementById(`dayTotal_${dateISO}`);
+      if (!el) return;
+      const dayMeals = state.meals[dateISO] || {};
+      let dayTotal = 0;
+      MEAL_SLOTS.forEach((s) => {
+        dayTotal += Number(dayMeals[s.id]?.cost) || 0;
+      });
+      el.textContent = formatPHP(dayTotal);
+    }
+
+    function renderGroceryList() {
+      const container = document.getElementById("groceryListContainer");
+      if (state.groceryList.length === 0) {
+        container.innerHTML = `<div class="empty-state">Your grocery list is empty. Type meals in the planner above or add items directly!</div>`;
+        return;
+      }
+
+      container.innerHTML = state.groceryList
+        .map(
+          (item) => `
+          <div class="grocery-item ${item.checked ? "checked" : ""}">
+            <input
+              type="checkbox"
+              class="grocery-checkbox"
+              ${item.checked ? "checked" : ""}
+              onchange="toggleGroceryItem('${item.id}')"
+            />
+            <input
+              type="text"
+              class="grocery-text-input"
+              value="${escapeHtml(item.text)}"
+              oninput="editGroceryItemText('${item.id}', this.value)"
+            />
+            <button type="button" class="btn btn-sm btn-danger" onclick="deleteGroceryItem('${item.id}')">&times;</button>
+          </div>
+        `
+        )
+        .join("");
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function renderHeaderPeriod() {
+      const bounds = getPeriodBounds(state.periodType, state.anchorDate);
+      document.getElementById("periodDateRange").textContent = formatPeriodRangeLabel(
+        state.periodType,
+        bounds.startDate,
+        bounds.endDate
+      );
+
+      document.querySelectorAll(".period-tab").forEach((btn) => {
+        btn.classList.toggle("active", btn.dataset.period === state.periodType);
+      });
+    }
+
+    function renderAll() {
+      renderHeaderPeriod();
+      renderSummaryAndCategories(true);
+      renderExpenses();
+      renderMealPlanner();
+      renderGroceryList();
+    }
+
+    // Initialize App on Load
+    syncDefaultExpenseDate();
+    renderAll();
+  </script>
+</body>
+</html>
