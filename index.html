@@ -3,65 +3,90 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Meal &amp; Budget Planner</title>
+  <title>Home Budget &amp; Grocery Planner</title>
   <style>
     /* =========================================================
-       1. WARM, LIGHT & HOMEY THEME (Default Light + Optional Cozy Dark)
+       1. ARTISAN WARM & HOMEY THEME PALETTE
        ========================================================= */
     :root {
-      --bg: #faf4ec;
-      --bg-pattern: radial-gradient(#e8dccb 1px, transparent 1px);
+      --bg-top: #fbf7f0;
+      --bg-bottom: #f3ebe0;
       --surface: #fffdf9;
-      --surface-alt: #f4ece0;
-      --surface-highlight: #efe4d4;
-      --border: #e2d4c1;
-      --text: #3b2d22;
-      --text-muted: #7a6655;
-      --primary: #c0603e;
-      --primary-hover: #a64d2e;
-      --primary-soft: #fbe6dc;
-      --accent-sage: #4a7c59;
-      --green: #2d6a4f;
-      --green-bg: #e3f4eb;
-      --yellow: #b4690e;
-      --yellow-bg: #fef1d8;
-      --red: #c93b2b;
-      --red-bg: #fde8e5;
-      --red-border: #eb857a;
-      --planned: #3d6b88;
-      --planned-bg: #e4eff6;
-      --shadow: 0 4px 16px rgba(82, 58, 36, 0.07);
-      --radius: 16px;
+      --surface-soft: #f8f2e8;
+      --surface-warm: #f1e7d8;
+      --border: #e5d8c5;
+      --border-strong: #d4c2aa;
+      --text: #33261d;
+      --text-secondary: #6e5a49;
+      --text-muted: #968270;
+
+      --primary: #c25e42;
+      --primary-hover: #a84b31;
+      --primary-soft: #fcece6;
+
+      --sage: #4c785c;
+      --sage-hover: #3d634b;
+      --sage-soft: #e5f1e9;
+
+      --green: #387656;
+      --green-bg: #e3f3ea;
+      --yellow: #c87a19;
+      --yellow-bg: #fef2de;
+      --red: #c43c2f;
+      --red-bg: #fde9e6;
+      --red-border: #eb938a;
+
+      --note-cream: #fff9db;
+      --note-peach: #ffe8d6;
+      --note-sage: #e8f3dc;
+      --note-sky: #e3f2fd;
+
+      --shadow-sm: 0 2px 6px rgba(68, 46, 26, 0.05);
+      --shadow-md: 0 8px 24px rgba(68, 46, 26, 0.07), 0 2px 6px rgba(68, 46, 26, 0.04);
+      --radius-lg: 20px;
+      --radius-md: 14px;
       --radius-sm: 10px;
     }
 
     html[data-theme="dark"] {
-      --bg: #221c17;
-      --bg-pattern: radial-gradient(#332a22 1px, transparent 1px);
-      --surface: #2c241e;
-      --surface-alt: #382e26;
-      --surface-highlight: #44382e;
-      --border: #4d4035;
-      --text: #f5ebe0;
-      --text-muted: #b8a593;
+      --bg-top: #1e1915;
+      --bg-bottom: #171310;
+      --surface: #28211c;
+      --surface-soft: #322923;
+      --surface-warm: #3d322b;
+      --border: #473b32;
+      --border-strong: #5c4d42;
+      --text: #f5ece2;
+      --text-secondary: #c7b6a6;
+      --text-muted: #968474;
+
       --primary: #e07a5f;
-      --primary-hover: #eb947c;
-      --primary-soft: #4a2c23;
-      --accent-sage: #81b29a;
+      --primary-hover: #eb9078;
+      --primary-soft: #472a22;
+
+      --sage: #6ba383;
+      --sage-hover: #81b597;
+      --sage-soft: #24382d;
+
       --green: #52b788;
       --green-bg: rgba(82, 183, 136, 0.16);
       --yellow: #f4a261;
       --yellow-bg: rgba(244, 162, 97, 0.16);
       --red: #f28482;
       --red-bg: rgba(242, 132, 130, 0.16);
-      --red-border: #e6605d;
-      --planned: #8ecae6;
-      --planned-bg: rgba(142, 202, 230, 0.16);
-      --shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+      --red-border: #e06360;
+
+      --note-cream: #3a3420;
+      --note-peach: #3d2b22;
+      --note-sage: #243528;
+      --note-sky: #21313d;
+
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 10px 28px rgba(0, 0, 0, 0.4);
     }
 
     /* =========================================================
-       2. BASE & MOBILE-FIRST LAYOUT STYLES
+       2. GLOBAL RESET & TYPOGRAPHY
        ========================================================= */
     * {
       box-sizing: border-box;
@@ -70,45 +95,46 @@
     }
 
     body {
-      font-family: "Georgia", "Palatino Linotype", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background-color: var(--bg);
-      background-image: var(--bg-pattern);
-      background-size: 22px 22px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", Roboto, Helvetica, Arial, sans-serif;
+      background: linear-gradient(180deg, var(--bg-top) 0%, var(--bg-bottom) 100%);
+      background-attachment: fixed;
       color: var(--text);
       line-height: 1.55;
-      padding-bottom: 3rem;
+      padding-bottom: 3.5rem;
+      min-height: 100vh;
       -webkit-font-smoothing: antialiased;
     }
 
-    input, select, button, .sans-ui {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    .serif-heading {
+      font-family: "Georgia", "Palatino Linotype", "Book Antiqua", serif;
+      letter-spacing: -0.01em;
     }
 
     .container {
-      max-width: 1080px;
+      max-width: 1100px;
       margin: 0 auto;
-      padding: 1.15rem;
+      padding: 1.4rem 1.15rem;
       display: flex;
       flex-direction: column;
-      gap: 1.25rem;
+      gap: 1.35rem;
     }
 
-    /* Editable Titles & Labels */
+    /* Inline Editable Titles */
     .editable-title {
       border: 1px dashed transparent;
-      border-radius: 6px;
-      padding: 0.1rem 0.35rem;
-      margin: -0.1rem -0.35rem;
+      border-radius: 8px;
+      padding: 0.12rem 0.45rem;
+      margin: -0.12rem -0.45rem;
       background: transparent;
       color: inherit;
       font: inherit;
       cursor: text;
-      transition: border-color 0.15s ease, background-color 0.15s ease;
+      transition: all 0.18s ease;
     }
 
     .editable-title:hover {
-      border-color: var(--border);
-      background: var(--surface-alt);
+      border-color: var(--border-strong);
+      background: var(--surface-soft);
     }
 
     .editable-title:focus {
@@ -117,102 +143,106 @@
       background: var(--surface);
     }
 
-    .edit-hint {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      font-weight: 500;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.25rem;
-    }
-
     /* =========================================================
-       3. HEADER & WARNING BANNER
+       3. HERO HEADER & PERIOD BAR
        ========================================================= */
     header {
-      display: flex;
-      flex-direction: column;
-      gap: 0.85rem;
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.25rem 1.35rem;
-      box-shadow: var(--shadow);
+      border-radius: var(--radius-lg);
+      padding: 1.4rem 1.5rem;
+      box-shadow: var(--shadow-md);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, var(--primary), var(--sage), var(--yellow));
     }
 
     .header-top {
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
-      align-items: center;
-      gap: 0.75rem;
+      align-items: flex-start;
+      gap: 1rem;
     }
 
     .brand-area {
       display: flex;
       flex-direction: column;
-      gap: 0.15rem;
+      gap: 0.25rem;
       flex: 1;
-      min-width: 240px;
+      min-width: 250px;
     }
 
     .app-title-input {
-      font-family: "Georgia", serif;
-      font-size: 1.5rem;
+      font-family: "Georgia", "Palatino Linotype", serif;
+      font-size: 1.65rem;
       font-weight: 700;
       color: var(--text);
       width: 100%;
     }
 
     .app-subtitle-input {
-      font-size: 0.88rem;
-      color: var(--text-muted);
+      font-size: 0.9rem;
+      color: var(--text-secondary);
       width: 100%;
     }
 
     .header-controls {
       display: flex;
       align-items: center;
-      gap: 0.6rem;
+      gap: 0.65rem;
       flex-wrap: wrap;
     }
 
-    /* Period Selector Tabs */
     .period-tabs {
       display: inline-flex;
-      background: var(--surface-alt);
-      padding: 0.25rem;
-      border-radius: var(--radius-sm);
+      background: var(--surface-soft);
+      padding: 0.28rem;
+      border-radius: 999px;
       border: 1px solid var(--border);
     }
 
     .period-tab {
       border: none;
       background: transparent;
-      color: var(--text-muted);
+      color: var(--text-secondary);
       font-weight: 600;
       font-size: 0.88rem;
-      padding: 0.45rem 0.9rem;
-      border-radius: 7px;
+      padding: 0.45rem 1.05rem;
+      border-radius: 999px;
       cursor: pointer;
-      transition: all 0.15s ease;
+      transition: all 0.18s ease;
+    }
+
+    .period-tab:hover {
+      color: var(--text);
     }
 
     .period-tab.active {
       background: var(--primary);
       color: #ffffff;
-      box-shadow: 0 2px 6px rgba(192, 96, 62, 0.25);
+      box-shadow: 0 2px 8px rgba(194, 94, 66, 0.3);
     }
 
-    /* Date Navigation Bar */
     .period-nav {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: var(--surface-alt);
-      padding: 0.6rem 0.85rem;
-      border-radius: var(--radius-sm);
+      background: var(--surface-soft);
+      padding: 0.65rem 0.95rem;
+      border-radius: var(--radius-md);
       border: 1px solid var(--border);
       gap: 0.5rem;
     }
@@ -220,26 +250,30 @@
     .period-nav-center {
       display: flex;
       align-items: center;
-      gap: 0.55rem;
+      gap: 0.65rem;
       flex-wrap: wrap;
       justify-content: center;
       text-align: center;
     }
 
     .period-label {
-      font-size: 1.05rem;
+      font-family: "Georgia", serif;
+      font-size: 1.1rem;
       font-weight: 700;
+      color: var(--text);
     }
 
-    /* Overflow Warning Banner */
+    /* =========================================================
+       4. WARNING BANNER (Overflow Alert)
+       ========================================================= */
     .warning-banner {
       display: none;
       background: var(--red-bg);
-      border: 2px solid var(--red-border);
+      border: 1.5px solid var(--red-border);
       color: var(--red);
-      border-radius: var(--radius);
-      padding: 0.95rem 1.15rem;
-      box-shadow: var(--shadow);
+      border-radius: var(--radius-md);
+      padding: 1rem 1.25rem;
+      box-shadow: var(--shadow-sm);
     }
 
     .warning-banner.visible {
@@ -252,64 +286,82 @@
       margin-bottom: 0.35rem;
       display: flex;
       align-items: center;
-      gap: 0.4rem;
+      gap: 0.45rem;
     }
 
     .warning-list {
       list-style: disc;
       padding-left: 1.4rem;
       font-weight: 600;
-      font-size: 0.95rem;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 0.93rem;
     }
 
     /* =========================================================
-       4. CARDS, BUTTONS & INPUTS
+       5. CARDS, BUTTONS & INPUT CONTROLS
        ========================================================= */
     .card {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.3rem;
-      box-shadow: var(--shadow);
+      border-radius: var(--radius-lg);
+      padding: 1.45rem;
+      box-shadow: var(--shadow-md);
     }
 
-    .section-title {
-      font-size: 1.2rem;
-      font-weight: 700;
-      margin-bottom: 0.95rem;
+    .section-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 0.5rem;
+      gap: 0.6rem;
+      margin-bottom: 1.1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--surface-warm);
     }
 
-    .section-title-left {
+    .section-title-group {
       display: flex;
       align-items: center;
-      gap: 0.4rem;
+      gap: 0.45rem;
       flex-wrap: wrap;
+      font-family: "Georgia", serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    .pill-hint {
+      font-size: 0.76rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      background: var(--surface-soft);
+      border: 1px solid var(--border);
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
     }
 
     .btn {
-      border: 1px solid var(--border);
+      border: 1px solid var(--border-strong);
       background: var(--surface);
       color: var(--text);
       font-weight: 600;
       font-size: 0.86rem;
-      padding: 0.45rem 0.85rem;
+      padding: 0.5rem 0.95rem;
       border-radius: var(--radius-sm);
       cursor: pointer;
-      transition: all 0.15s ease;
+      transition: all 0.16s ease;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 0.35rem;
+      white-space: nowrap;
     }
 
     .btn:hover {
-      background: var(--surface-highlight);
+      background: var(--surface-warm);
+      transform: translateY(-1px);
+    }
+
+    .btn:active {
+      transform: translateY(0);
     }
 
     .btn-primary {
@@ -320,21 +372,24 @@
 
     .btn-primary:hover {
       background: var(--primary-hover);
+      border-color: var(--primary-hover);
     }
 
     .btn-sage {
-      background: var(--accent-sage);
-      border-color: var(--accent-sage);
+      background: var(--sage);
+      border-color: var(--sage);
       color: #ffffff;
     }
 
     .btn-sage:hover {
-      opacity: 0.92;
+      background: var(--sage-hover);
+      border-color: var(--sage-hover);
     }
 
     .btn-danger {
       color: var(--red);
       border-color: var(--red-border);
+      background: transparent;
     }
 
     .btn-danger:hover {
@@ -342,51 +397,61 @@
     }
 
     .btn-sm {
-      padding: 0.3rem 0.65rem;
+      padding: 0.32rem 0.7rem;
       font-size: 0.8rem;
+      border-radius: 8px;
     }
 
     input[type="text"],
     input[type="number"],
     input[type="date"],
-    select {
+    select,
+    textarea {
       width: 100%;
-      padding: 0.55rem 0.7rem;
+      padding: 0.6rem 0.75rem;
       border-radius: var(--radius-sm);
-      border: 1px solid var(--border);
+      border: 1px solid var(--border-strong);
       background: var(--surface);
       color: var(--text);
-      font-size: 0.95rem;
+      font-size: 0.94rem;
+      font-family: inherit;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
     }
 
-    input:focus, select:focus {
-      outline: 2px solid var(--primary);
-      border-color: transparent;
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-soft);
     }
 
     label {
       display: block;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       font-weight: 600;
-      color: var(--text-muted);
-      margin-bottom: 0.25rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.3rem;
     }
 
     /* =========================================================
-       5. SUMMARY METRICS & CUSTOMIZABLE CATEGORY CARDS
+       6. OVERALL SUMMARY CARDS
        ========================================================= */
     .summary-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 0.9rem;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 1rem;
     }
 
     .stat-box {
-      background: var(--surface-alt);
+      background: linear-gradient(145deg, var(--surface-soft), var(--surface));
       border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 0.95rem 1.05rem;
+      border-radius: var(--radius-md);
+      padding: 1.15rem 1.2rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
 
     .stat-box.over-budget {
@@ -398,33 +463,31 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 0.35rem;
+      gap: 0.4rem;
     }
 
     .stat-label-input {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       font-weight: 700;
-      color: var(--text-muted);
+      color: var(--text-secondary);
       text-transform: uppercase;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.05em;
       width: auto;
-      max-width: 180px;
+      max-width: 190px;
     }
 
     .stat-value {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      font-size: 1.6rem;
+      font-size: 1.75rem;
       font-weight: 800;
-      margin-top: 0.2rem;
+      margin-top: 0.3rem;
       font-variant-numeric: tabular-nums;
+      letter-spacing: -0.02em;
     }
 
     .stat-sub {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      font-size: 0.82rem;
-      margin-top: 0.25rem;
-      color: var(--text-muted);
+      font-size: 0.83rem;
+      margin-top: 0.35rem;
+      color: var(--text-secondary);
       font-weight: 600;
     }
 
@@ -436,79 +499,70 @@
       color: var(--green) !important;
     }
 
-    .text-planned {
-      color: var(--planned) !important;
+    .text-sage {
+      color: var(--sage) !important;
     }
 
     .badge-over {
       display: inline-block;
       background: var(--red);
       color: #ffffff;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       font-weight: 700;
-      padding: 0.15rem 0.5rem;
+      padding: 0.18rem 0.55rem;
       border-radius: 999px;
       text-transform: uppercase;
       letter-spacing: 0.04em;
-      vertical-align: middle;
       white-space: nowrap;
     }
 
-    .badge-projected-over {
-      display: inline-block;
-      background: var(--yellow);
-      color: #ffffff;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      font-size: 0.72rem;
-      font-weight: 700;
-      padding: 0.15rem 0.5rem;
-      border-radius: 999px;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      vertical-align: middle;
-      white-space: nowrap;
-    }
-
-    /* Allowance & Category Budget Config */
+    /* =========================================================
+       7. ALLOWANCE & CUSTOMIZABLE CATEGORY CARDS
+       ========================================================= */
     .allowance-bar {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 0.9rem;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
       align-items: end;
-      margin-bottom: 1.15rem;
-      padding-bottom: 1.05rem;
-      border-bottom: 1px solid var(--border);
+      background: var(--surface-soft);
+      padding: 1rem 1.15rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      margin-bottom: 1.25rem;
     }
 
     .unassigned-box {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      padding: 0.6rem 0.9rem;
+      padding: 0.65rem 1rem;
       border-radius: var(--radius-sm);
-      background: var(--surface-alt);
+      background: var(--surface);
       border: 1px solid var(--border);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 0.92rem;
+      font-size: 0.94rem;
       font-weight: 600;
     }
 
     .categories-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(285px, 1fr));
-      gap: 1.05rem;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 1.1rem;
     }
 
     .category-card {
-      background: var(--surface-alt);
+      background: var(--surface-soft);
       border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 1.05rem;
+      border-radius: var(--radius-md);
+      padding: 1.15rem;
       display: flex;
       flex-direction: column;
-      gap: 0.75rem;
-      transition: border-color 0.2s ease;
+      gap: 0.85rem;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.15s ease, border-color 0.2s ease;
+    }
+
+    .category-card:hover {
+      border-color: var(--border-strong);
     }
 
     .category-card.is-over {
@@ -520,19 +574,19 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 0.45rem;
+      gap: 0.5rem;
     }
 
     .category-name-input {
       font-family: "Georgia", serif;
       font-weight: 700;
-      font-size: 1.08rem;
+      font-size: 1.1rem;
       flex: 1;
       min-width: 120px;
-      border: 1px dashed var(--border);
-      background: var(--surface);
-      padding: 0.28rem 0.5rem;
-      border-radius: 6px;
+      border: 1px dashed var(--border-strong) !important;
+      background: var(--surface) !important;
+      padding: 0.32rem 0.6rem !important;
+      border-radius: 8px !important;
       color: var(--text);
     }
 
@@ -542,68 +596,32 @@
       gap: 0.35rem;
     }
 
-    .meal-link-btn {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      font-size: 0.73rem;
-      padding: 0.2rem 0.5rem;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: var(--surface);
-      color: var(--text-muted);
-      cursor: pointer;
-      font-weight: 600;
-    }
-
-    .meal-link-btn.active {
-      background: var(--planned-bg);
-      border-color: var(--planned);
-      color: var(--planned);
-    }
-
     .cat-metrics {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 0.5rem;
       background: var(--surface);
-      padding: 0.65rem;
-      border-radius: 8px;
+      padding: 0.75rem 0.6rem;
+      border-radius: var(--radius-sm);
       border: 1px solid var(--border);
       text-align: center;
     }
 
     .cat-metric-label {
-      font-size: 0.71rem;
+      font-size: 0.7rem;
       color: var(--text-muted);
       font-weight: 700;
       text-transform: uppercase;
+      letter-spacing: 0.03em;
     }
 
     .cat-metric-val {
-      font-size: 0.98rem;
+      font-size: 1rem;
       font-weight: 800;
-      margin-top: 0.1rem;
+      margin-top: 0.15rem;
       font-variant-numeric: tabular-nums;
     }
 
-    .planned-box {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: var(--planned-bg);
-      border-radius: 8px;
-      padding: 0.6rem 0.75rem;
-      font-size: 0.84rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
-    }
-
-    .planned-row {
-      display: flex;
-      justify-content: space-between;
-      font-weight: 600;
-    }
-
-    /* Progress Bar */
     .progress-track {
       width: 100%;
       height: 12px;
@@ -611,7 +629,6 @@
       border: 1px solid var(--border);
       border-radius: 999px;
       overflow: hidden;
-      position: relative;
     }
 
     .progress-fill {
@@ -621,64 +638,283 @@
     }
 
     .progress-green {
-      background-color: var(--green);
+      background: linear-gradient(90deg, #4c956c, var(--green));
     }
 
     .progress-yellow {
-      background-color: var(--yellow);
+      background: linear-gradient(90deg, #e09f3e, var(--yellow));
     }
 
     .progress-red {
-      background-color: var(--red);
+      background: linear-gradient(90deg, #e56b6f, var(--red));
     }
 
     .progress-caption {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       display: flex;
       justify-content: space-between;
-      font-size: 0.78rem;
+      font-size: 0.79rem;
       font-weight: 600;
-      color: var(--text-muted);
+      color: var(--text-secondary);
+      margin-top: 0.35rem;
     }
 
     /* =========================================================
-       6. EXPENSE TRACKER FORM & LIST
+       8. GROCERY LIST & KITCHEN NOTES STUDIO
        ========================================================= */
-    .expense-form {
+    .grocery-studio-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 0.75rem;
-      align-items: end;
-      background: var(--surface-alt);
-      padding: 0.95rem;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--border);
-      margin-bottom: 1rem;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 1.25rem;
+      align-items: start;
     }
 
-    .expense-list {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    @media (max-width: 860px) {
+      .grocery-studio-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .subpanel {
+      background: var(--surface-soft);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 1.15rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+    }
+
+    .subpanel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .subpanel-title {
+      font-family: "Georgia", serif;
+      font-size: 1.06rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .cart-summary-pill {
+      font-size: 0.82rem;
+      font-weight: 700;
+      background: var(--sage-soft);
+      color: var(--sage);
+      border: 1px solid var(--border);
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+    }
+
+    .grocery-add-bar {
+      display: grid;
+      grid-template-columns: 1fr 110px 105px auto;
+      gap: 0.45rem;
+      align-items: center;
+    }
+
+    @media (max-width: 600px) {
+      .grocery-add-bar {
+        grid-template-columns: 1fr 1fr;
+      }
+      .grocery-add-bar input:first-child {
+        grid-column: 1 / -1;
+      }
+    }
+
+    .grocery-list {
       display: flex;
       flex-direction: column;
       gap: 0.5rem;
+      max-height: 430px;
+      overflow-y: auto;
+      padding-right: 0.2rem;
+    }
+
+    .grocery-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 0.55rem 0.7rem;
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow-sm);
+      flex-wrap: wrap;
+    }
+
+    .grocery-item.checked {
+      opacity: 0.72;
+      background: var(--surface-soft);
+    }
+
+    .grocery-item.checked .grocery-name-input {
+      text-decoration: line-through;
+      color: var(--text-muted);
+    }
+
+    .grocery-checkbox {
+      width: 1.15rem;
+      height: 1.15rem;
+      cursor: pointer;
+      accent-color: var(--sage);
+      flex-shrink: 0;
+    }
+
+    .grocery-name-input {
+      border: 1px solid transparent !important;
+      background: transparent !important;
+      flex: 1;
+      min-width: 120px;
+      padding: 0.25rem 0.4rem !important;
+      font-size: 0.93rem !important;
+      font-weight: 600;
+    }
+
+    .grocery-qty-input {
+      width: 92px !important;
+      padding: 0.25rem 0.45rem !important;
+      font-size: 0.82rem !important;
+      background: var(--surface-soft) !important;
+      border: 1px solid var(--border) !important;
+      color: var(--text-secondary) !important;
+      text-align: center;
+    }
+
+    .grocery-price-input {
+      width: 88px !important;
+      padding: 0.25rem 0.45rem !important;
+      font-size: 0.84rem !important;
+      font-weight: 700;
+      text-align: right;
+      background: var(--surface-soft) !important;
+      border: 1px solid var(--border) !important;
+    }
+
+    /* Sticky Notes Board */
+    .notes-board {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .note-card {
+      border-radius: var(--radius-sm);
+      padding: 0.85rem 0.95rem;
+      border: 1px solid rgba(120, 90, 60, 0.18);
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      transition: transform 0.15s ease;
+    }
+
+    .note-color-cream { background-color: var(--note-cream); }
+    .note-color-peach { background-color: var(--note-peach); }
+    .note-color-sage  { background-color: var(--note-sage); }
+    .note-color-sky   { background-color: var(--note-sky); }
+
+    .note-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .note-title-input {
+      font-family: "Georgia", serif;
+      font-weight: 700;
+      font-size: 0.96rem !important;
+      border: 1px dashed transparent !important;
+      background: transparent !important;
+      padding: 0.15rem 0.35rem !important;
+      color: var(--text) !important;
+      flex: 1;
+    }
+
+    .note-title-input:focus {
+      background: var(--surface) !important;
+      border-color: var(--border-strong) !important;
+    }
+
+    .note-body-textarea {
+      border: 1px dashed transparent !important;
+      background: transparent !important;
+      padding: 0.25rem 0.35rem !important;
+      font-size: 0.89rem !important;
+      line-height: 1.5;
+      color: var(--text) !important;
+      resize: vertical;
+      min-height: 68px;
+    }
+
+    .note-body-textarea:focus {
+      background: var(--surface) !important;
+      border-color: var(--border-strong) !important;
+    }
+
+    .note-color-dots {
+      display: inline-flex;
+      gap: 0.25rem;
+      align-items: center;
+    }
+
+    .color-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 1px solid rgba(0, 0, 0, 0.25);
+      cursor: pointer;
+      padding: 0;
+    }
+
+    /* =========================================================
+       9. EXPENSE TRACKER FORM & LIST
+       ========================================================= */
+    .expense-form {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
+      gap: 0.8rem;
+      align-items: end;
+      background: var(--surface-soft);
+      padding: 1.05rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      margin-bottom: 1.1rem;
+    }
+
+    .expense-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
     }
 
     .expense-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0.75rem 0.95rem;
-      background: var(--surface-alt);
+      padding: 0.8rem 1rem;
+      background: var(--surface-soft);
       border: 1px solid var(--border);
       border-radius: var(--radius-sm);
       gap: 0.75rem;
       flex-wrap: wrap;
+      transition: background-color 0.15s ease;
+    }
+
+    .expense-item:hover {
+      background: var(--surface-warm);
     }
 
     .expense-info {
       display: flex;
       flex-direction: column;
-      gap: 0.15rem;
+      gap: 0.18rem;
     }
 
     .expense-title {
@@ -688,7 +924,7 @@
 
     .expense-meta {
       font-size: 0.8rem;
-      color: var(--text-muted);
+      color: var(--text-secondary);
       display: flex;
       gap: 0.5rem;
       align-items: center;
@@ -697,11 +933,12 @@
 
     .cat-pill {
       background: var(--surface);
-      border: 1px solid var(--border);
-      padding: 0.1rem 0.5rem;
+      border: 1px solid var(--border-strong);
+      padding: 0.12rem 0.55rem;
       border-radius: 999px;
       font-weight: 600;
       font-size: 0.75rem;
+      color: var(--text);
     }
 
     .expense-right {
@@ -712,176 +949,23 @@
     }
 
     .expense-amount {
-      font-size: 1.08rem;
+      font-size: 1.1rem;
       font-weight: 800;
       font-variant-numeric: tabular-nums;
     }
 
     .empty-state {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       text-align: center;
       color: var(--text-muted);
-      padding: 1.3rem;
-      font-size: 0.92rem;
-      background: var(--surface-alt);
-      border-radius: var(--radius-sm);
-      border: 1px dashed var(--border);
-    }
-
-    /* =========================================================
-       7. MEAL PLANNER & GROCERY LIST
-       ========================================================= */
-    .meal-slot-names-bar {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-      margin-bottom: 0.85rem;
-      padding: 0.6rem 0.8rem;
-      background: var(--surface-alt);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-    }
-
-    .meal-slot-names-bar span {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: var(--text-muted);
-    }
-
-    .slot-name-chip {
-      width: 115px !important;
-      padding: 0.3rem 0.5rem !important;
-      font-size: 0.82rem !important;
-      font-weight: 600;
-    }
-
-    .meal-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(245px, 1fr));
-      gap: 0.9rem;
-      max-height: 540px;
-      overflow-y: auto;
-      padding-right: 0.25rem;
-    }
-
-    .day-card {
-      background: var(--surface-alt);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 0.85rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.55rem;
-    }
-
-    .day-card.is-today {
-      border: 2px solid var(--primary);
+      padding: 1.35rem;
+      font-size: 0.9rem;
       background: var(--surface);
-    }
-
-    .day-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-weight: 700;
-      font-size: 0.94rem;
-      padding-bottom: 0.35rem;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .day-total {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      font-size: 0.82rem;
-      color: var(--planned);
-      font-weight: 700;
-    }
-
-    .meal-slot {
-      display: flex;
-      flex-direction: column;
-      gap: 0.2rem;
-    }
-
-    .meal-slot-label {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      font-size: 0.73rem;
-      font-weight: 700;
-      color: var(--text-muted);
-      text-transform: uppercase;
-    }
-
-    .meal-inputs {
-      display: grid;
-      grid-template-columns: 1fr 88px;
-      gap: 0.35rem;
-    }
-
-    .meal-inputs input {
-      padding: 0.38rem 0.5rem;
-      font-size: 0.85rem;
-    }
-
-    /* Grocery List */
-    .grocery-controls {
-      display: flex;
-      gap: 0.5rem;
-      margin-bottom: 0.85rem;
-      flex-wrap: wrap;
-    }
-
-    .grocery-add-row {
-      display: flex;
-      gap: 0.5rem;
-      flex: 1;
-      min-width: 240px;
-    }
-
-    .grocery-list {
-      display: flex;
-      flex-direction: column;
-      gap: 0.45rem;
-    }
-
-    .grocery-item {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      background: var(--surface-alt);
-      border: 1px solid var(--border);
-      padding: 0.5rem 0.75rem;
       border-radius: var(--radius-sm);
-    }
-
-    .grocery-item.checked .grocery-text-input {
-      text-decoration: line-through;
-      color: var(--text-muted);
-    }
-
-    .grocery-checkbox {
-      width: 1.15rem;
-      height: 1.15rem;
-      cursor: pointer;
-      accent-color: var(--primary);
-    }
-
-    .grocery-text-input {
-      border: 1px solid transparent !important;
-      background: transparent !important;
-      flex: 1;
-      padding: 0.25rem 0.4rem !important;
-      font-size: 0.92rem !important;
-      font-weight: 500;
-    }
-
-    .grocery-text-input:focus {
-      background: var(--surface) !important;
-      border-color: var(--border) !important;
+      border: 1px dashed var(--border-strong);
     }
 
     /* =========================================================
-       8. DATA / STORAGE FOOTER
+       10. DATA / STORAGE FOOTER
        ========================================================= */
     .data-actions {
       display: flex;
@@ -891,10 +975,9 @@
     }
 
     .status-toast {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      font-size: 0.85rem;
+      font-size: 0.84rem;
       font-weight: 600;
-      color: var(--primary);
+      color: var(--sage);
       margin-left: auto;
     }
 
@@ -909,7 +992,7 @@
         align-items: center;
       }
       .stat-value {
-        font-size: 1.35rem;
+        font-size: 1.45rem;
       }
     }
   </style>
@@ -917,7 +1000,7 @@
 <body>
   <div class="container">
     <!-- =======================================================
-         1. HEADER & BUDGET PERIOD SELECTOR (Customizable Title)
+         1. HEADER & BUDGET PERIOD SELECTOR
          ======================================================= -->
     <header>
       <div class="header-top">
@@ -926,7 +1009,7 @@
             id="titleApp"
             type="text"
             class="editable-title app-title-input"
-            value="🍲 Our Home Meal &amp; Budget Planner"
+            value="🏡 Our Home Budget &amp; Grocery Companion"
             title="Click to customize title"
             oninput="handleTitleChange('appTitle', this.value)"
           />
@@ -934,7 +1017,7 @@
             id="titleSubtitle"
             type="text"
             class="editable-title app-subtitle-input"
-            value="✨ Click any title or category name to customize it"
+            value="✨ Mindful spending, kitchen notes &amp; household allowance tracker"
             title="Click to customize subtitle"
             oninput="handleTitleChange('appSubtitle', this.value)"
           />
@@ -942,7 +1025,7 @@
 
         <div class="header-controls">
           <button type="button" id="themeToggleBtn" class="btn btn-sm" onclick="toggleTheme()">
-            🌙 Cozy Dark
+            🌙 Cozy Evening
           </button>
           <div class="period-tabs" role="tablist" aria-label="Budget Period">
             <button type="button" class="period-tab" data-period="daily" onclick="setPeriodType('daily')">Daily</button>
@@ -953,7 +1036,7 @@
       </div>
 
       <div class="period-nav">
-        <button type="button" class="btn btn-sm" onclick="shiftPeriod(-1)" aria-label="Previous period">&larr; Prev</button>
+        <button type="button" class="btn btn-sm" onclick="shiftPeriod(-1)" aria-label="Previous period">&larr; Previous</button>
         <div class="period-nav-center">
           <span id="periodDateRange" class="period-label"></span>
           <button type="button" class="btn btn-sm" onclick="resetToToday()">Today</button>
@@ -971,24 +1054,25 @@
     </div>
 
     <!-- =======================================================
-         3. OVERALL SUMMARY CARD (Customizable Titles)
+         3. OVERALL SUMMARY CARD
          ======================================================= -->
     <section class="card" aria-label="Overall Budget Summary">
-      <div class="section-title">
-        <div class="section-title-left">
+      <div class="section-header">
+        <div class="section-title-group">
           <input
             id="titleSummarySection"
             type="text"
             class="editable-title"
-            style="width: 175px;"
+            style="width: 185px;"
             value="Overall Summary"
             title="Click to rename section"
             oninput="handleTitleChange('summarySection', this.value)"
           />
           <span>(<span id="summaryPeriodName">Weekly</span>)</span>
         </div>
-        <span class="edit-hint">✏️ Click titles or categories to edit</span>
+        <span class="pill-hint">✏️ Click any heading or category name to customize</span>
       </div>
+
       <div class="summary-grid">
         <div class="stat-box">
           <div class="stat-label-row">
@@ -1003,6 +1087,7 @@
           <div id="sumAllowance" class="stat-value">₱0.00</div>
           <div id="sumUnassignedSub" class="stat-sub">Unassigned: ₱0.00</div>
         </div>
+
         <div class="stat-box">
           <div class="stat-label-row">
             <input
@@ -1014,8 +1099,9 @@
             />
           </div>
           <div id="sumSpent" class="stat-value">₱0.00</div>
-          <div id="sumPlannedSub" class="stat-sub">Planned Meals: ₱0.00</div>
+          <div id="sumCartSub" class="stat-sub">Est. Grocery List Cart: ₱0.00</div>
         </div>
+
         <div id="sumRemainingBox" class="stat-box">
           <div class="stat-label-row">
             <input
@@ -1028,7 +1114,7 @@
             <span id="sumOverBadge" class="badge-over" style="display: none;">Over budget</span>
           </div>
           <div id="sumRemaining" class="stat-value">₱0.00</div>
-          <div id="sumProjectedSub" class="stat-sub">Projected (Spent + Planned): ₱0.00</div>
+          <div id="sumProjectedSub" class="stat-sub">After Unchecked Cart: ₱0.00</div>
         </div>
       </div>
     </section>
@@ -1037,16 +1123,18 @@
          4. ALLOWANCE & CUSTOMIZABLE CATEGORY BUDGETS
          ======================================================= -->
     <section class="card" aria-label="Allowance and Category Budgets">
-      <div class="section-title">
-        <input
-          id="titleBudgetSection"
-          type="text"
-          class="editable-title"
-          style="min-width: 260px;"
-          value="Allowance &amp; Category Budgets"
-          title="Click to rename section"
-          oninput="handleTitleChange('budgetSection', this.value)"
-        />
+      <div class="section-header">
+        <div class="section-title-group">
+          <input
+            id="titleBudgetSection"
+            type="text"
+            class="editable-title"
+            style="min-width: 270px;"
+            value="Allowance &amp; Category Budgets"
+            title="Click to rename section"
+            oninput="handleTitleChange('budgetSection', this.value)"
+          />
+        </div>
         <button type="button" class="btn btn-sm btn-sage" onclick="addNewCategory()">
           + Add Category
         </button>
@@ -1065,7 +1153,7 @@
           />
         </div>
         <div class="unassigned-box">
-          <span>Unassigned Allowance:</span>
+          <span>Unassigned to Categories:</span>
           <strong id="unassignedAmount">₱0.00</strong>
         </div>
       </div>
@@ -1074,20 +1162,96 @@
     </section>
 
     <!-- =======================================================
-         5. EXPENSE TRACKING
+         5. GROCERY CHECKLIST & KITCHEN NOTES STUDIO
+         ======================================================= -->
+    <section class="card" aria-label="Grocery Checklist and Notes">
+      <div class="section-header">
+        <div class="section-title-group">
+          <input
+            id="titleGrocerySection"
+            type="text"
+            class="editable-title"
+            style="min-width: 260px;"
+            value="🧺 Grocery Checklist &amp; Notes"
+            title="Click to rename section"
+            oninput="handleTitleChange('grocerySection', this.value)"
+          />
+        </div>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <button type="button" class="btn btn-sm btn-sage" onclick="logCheckedGroceriesAsExpenses()" title="Add checked items with prices to your Expense list">
+            ✓ Log Checked to Expenses
+          </button>
+          <button type="button" class="btn btn-sm" onclick="clearCheckedGroceries()">
+            Clear Checked
+          </button>
+        </div>
+      </div>
+
+      <div class="grocery-studio-grid">
+        <!-- Left Subpanel: Interactive Shopping Checklist with Qty & Est. Price -->
+        <div class="subpanel">
+          <div class="subpanel-header">
+            <span class="subpanel-title">🛒 Shopping Checklist</span>
+            <span id="groceryCartTotalPill" class="cart-summary-pill">Est. Cart: ₱0.00</span>
+          </div>
+
+          <div class="grocery-add-bar">
+            <input
+              id="newGroceryName"
+              type="text"
+              placeholder="Item (e.g. Fresh Eggs, Garlic, Rice)..."
+              onkeydown="if(event.key==='Enter'){event.preventDefault();addManualGroceryItem();}"
+            />
+            <input
+              id="newGroceryQty"
+              type="text"
+              placeholder="Qty / Note"
+              onkeydown="if(event.key==='Enter'){event.preventDefault();addManualGroceryItem();}"
+            />
+            <input
+              id="newGroceryPrice"
+              type="number"
+              min="0"
+              step="0.01"
+              placeholder="Est. ₱"
+              onkeydown="if(event.key==='Enter'){event.preventDefault();addManualGroceryItem();}"
+            />
+            <button type="button" class="btn btn-primary" onclick="addManualGroceryItem()">+ Add</button>
+          </div>
+
+          <div id="groceryListContainer" class="grocery-list"></div>
+        </div>
+
+        <!-- Right Subpanel: Color-Coded Kitchen & Market Sticky Notes -->
+        <div class="subpanel">
+          <div class="subpanel-header">
+            <span class="subpanel-title">📝 Market &amp; Kitchen Notes</span>
+            <button type="button" class="btn btn-sm btn-primary" onclick="addGroceryNote()">
+              + New Note Card
+            </button>
+          </div>
+          <div id="notesBoardContainer" class="notes-board"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================
+         6. EXPENSE TRACKING
          ======================================================= -->
     <section class="card" aria-label="Expense Tracking">
-      <div class="section-title">
-        <input
-          id="titleExpenseSection"
-          type="text"
-          class="editable-title"
-          style="min-width: 250px;"
-          value="Expenses for Selected Period"
-          title="Click to rename section"
-          oninput="handleTitleChange('expenseSection', this.value)"
-        />
-        <span id="expenseCountLabel" class="sans-ui" style="font-size: 0.85rem; color: var(--text-muted);">0 items</span>
+      <div class="section-header">
+        <div class="section-title-group">
+          <input
+            id="titleExpenseSection"
+            type="text"
+            class="editable-title"
+            style="min-width: 250px;"
+            value="Expenses for Selected Period"
+            title="Click to rename section"
+            oninput="handleTitleChange('expenseSection', this.value)"
+          />
+        </div>
+        <span id="expenseCountLabel" class="pill-hint">0 items</span>
       </div>
 
       <form id="expenseForm" class="expense-form" onsubmit="handleExpenseSubmit(event)">
@@ -1101,8 +1265,8 @@
           <select id="expenseCategory" required></select>
         </div>
         <div>
-          <label for="expenseName">Item Name</label>
-          <input id="expenseName" type="text" placeholder="e.g. Chicken &amp; Vegetables" required />
+          <label for="expenseName">Item / Description</label>
+          <input id="expenseName" type="text" placeholder="e.g. Wet Market Veggies &amp; Fish" required />
         </div>
         <div>
           <label for="expenseAmount">Amount (₱)</label>
@@ -1118,70 +1282,13 @@
     </section>
 
     <!-- =======================================================
-         6. MEAL PLANNER (Calendar-Style per Day)
-         ======================================================= -->
-    <section class="card" aria-label="Meal Planner">
-      <div class="section-title">
-        <div class="section-title-left">
-          <input
-            id="titleMealSection"
-            type="text"
-            class="editable-title"
-            style="width: 150px;"
-            value="Meal Planner"
-            title="Click to rename section"
-            oninput="handleTitleChange('mealSection', this.value)"
-          />
-          <span class="sans-ui" style="font-size: 0.95rem;">(<span id="mealPlannerSummary" class="text-planned">Planned: ₱0.00</span>)</span>
-        </div>
-        <button type="button" class="btn btn-sm btn-primary" onclick="syncMealsToGroceryList()">
-          + Sync Meals to Grocery List
-        </button>
-      </div>
-
-      <div id="mealSlotNamesBar" class="meal-slot-names-bar"></div>
-
-      <div id="mealGrid" class="meal-grid"></div>
-    </section>
-
-    <!-- =======================================================
-         7. GROCERY LIST (Generated from Meals, Editable)
-         ======================================================= -->
-    <section class="card" aria-label="Grocery List">
-      <div class="section-title">
-        <input
-          id="titleGrocerySection"
-          type="text"
-          class="editable-title"
-          style="width: 180px;"
-          value="Grocery &amp; Shopping List"
-          title="Click to rename section"
-          oninput="handleTitleChange('grocerySection', this.value)"
-        />
-        <button type="button" class="btn btn-sm" onclick="clearCheckedGroceries()">Clear Checked</button>
-      </div>
-
-      <div class="grocery-controls">
-        <div class="grocery-add-row">
-          <input
-            id="newGroceryInput"
-            type="text"
-            placeholder="Add grocery item (or click Sync Meals above)..."
-            onkeydown="if(event.key==='Enter'){event.preventDefault();addManualGroceryItem();}"
-          />
-          <button type="button" class="btn btn-primary" onclick="addManualGroceryItem()">Add</button>
-        </div>
-      </div>
-
-      <div id="groceryListContainer" class="grocery-list"></div>
-    </section>
-
-    <!-- =======================================================
-         8. DATA & STORAGE (Export, Import, Reset)
+         7. DATA & STORAGE (Export, Import, Reset)
          ======================================================= -->
     <section class="card" aria-label="Data and Storage">
-      <div class="section-title">
-        <span>Data &amp; Backup</span>
+      <div class="section-header" style="margin-bottom: 0.85rem; border-bottom: none; padding-bottom: 0;">
+        <div class="section-title-group">
+          <span>Data &amp; Backup</span>
+        </div>
       </div>
       <div class="data-actions">
         <button type="button" class="btn" onclick="exportDataJson()">⬇ Export to JSON</button>
@@ -1197,7 +1304,7 @@
 
   <script>
     /* =========================================================
-       1. CONSTANTS & DEFAULT STATE (Customizable Categories & Titles)
+       1. CONSTANTS & DEFAULT STATE
        ========================================================= */
     const STORAGE_KEY = "meal_budget_planner_v1";
 
@@ -1207,29 +1314,35 @@
       { id: "other", name: "Other" }
     ];
 
-    const DEFAULT_MEAL_SLOTS = [
-      { id: "breakfast", label: "Breakfast" },
-      { id: "lunch", label: "Lunch" },
-      { id: "dinner", label: "Dinner" },
-      { id: "snack", label: "Snack" }
-    ];
-
     const DEFAULT_TITLES = {
-      appTitle: "🍲 Our Home Meal & Budget Planner",
-      appSubtitle: "✨ Click any title or category name to customize it",
+      appTitle: "🏡 Our Home Budget & Grocery Companion",
+      appSubtitle: "✨ Mindful spending, kitchen notes & household allowance tracker",
       summarySection: "Overall Summary",
       allowanceBox: "Total Allowance",
       spentBox: "Total Spent",
       remainingBox: "Total Remaining",
       budgetSection: "Allowance & Category Budgets",
-      expenseSection: "Expenses for Selected Period",
-      mealSection: "Meal Planner",
-      grocerySection: "Grocery & Shopping List"
+      grocerySection: "🧺 Grocery Checklist & Notes",
+      expenseSection: "Expenses for Selected Period"
     };
 
+    const DEFAULT_NOTES = [
+      {
+        id: "note_default_1",
+        title: "📌 Market Day Reminders",
+        body: "• Bring reusable eco bags\n• Check pantry for cooking oil, garlic & onions before buying\n• Compare wet market vs. supermarket produce prices",
+        color: "cream"
+      },
+      {
+        id: "note_default_2",
+        title: "🥫 Running Low in Pantry",
+        body: "• Dishwashing liquid\n• Brown rice (2 kg)\n• Eggs & fresh milk",
+        color: "sage"
+      }
+    ];
+
     function getTodayISO() {
-      const now = new Date();
-      return formatDateISO(now);
+      return formatDateISO(new Date());
     }
 
     function formatDateISO(dateObj) {
@@ -1246,21 +1359,19 @@
 
     function createDefaultState() {
       return {
-        theme: "light", // Warm, light & homey by default
+        theme: "light",
         periodType: "weekly",
         anchorDate: getTodayISO(),
         titles: { ...DEFAULT_TITLES },
         categories: JSON.parse(JSON.stringify(DEFAULT_CATEGORIES)),
-        mealCategoryId: "grocery",
-        mealSlots: JSON.parse(JSON.stringify(DEFAULT_MEAL_SLOTS)),
         budgets: {
           daily: { allowance: 500, categories: { grocery: 300, household: 100, other: 100 } },
           weekly: { allowance: 3500, categories: { grocery: 2000, household: 800, other: 500 } },
           monthly: { allowance: 15000, categories: { grocery: 9000, household: 3500, other: 2000 } }
         },
         expenses: [],
-        meals: {},
-        groceryList: []
+        groceryList: [], // [{ id, text, qty, estPrice, checked }]
+        groceryNotes: JSON.parse(JSON.stringify(DEFAULT_NOTES))
       };
     }
 
@@ -1281,14 +1392,10 @@
             ? parsed.categories
             : def.categories;
 
-        const mealSlots =
-          Array.isArray(parsed.mealSlots) && parsed.mealSlots.length > 0
-            ? parsed.mealSlots
-            : def.mealSlots;
-
-        const mealCategoryId = categories.some((c) => c.id === parsed.mealCategoryId)
-          ? parsed.mealCategoryId
-          : categories[0].id;
+        const groceryNotes =
+          Array.isArray(parsed.groceryNotes)
+            ? parsed.groceryNotes
+            : def.groceryNotes;
 
         return {
           theme: parsed.theme === "dark" ? "dark" : "light",
@@ -1296,8 +1403,6 @@
           anchorDate: parsed.anchorDate || def.anchorDate,
           titles: { ...def.titles, ...(parsed.titles || {}) },
           categories,
-          mealCategoryId,
-          mealSlots,
           budgets: {
             daily: {
               ...def.budgets.daily,
@@ -1316,8 +1421,16 @@
             }
           },
           expenses: Array.isArray(parsed.expenses) ? parsed.expenses : [],
-          meals: parsed.meals && typeof parsed.meals === "object" ? parsed.meals : {},
-          groceryList: Array.isArray(parsed.groceryList) ? parsed.groceryList : []
+          groceryList: Array.isArray(parsed.groceryList)
+            ? parsed.groceryList.map((item) => ({
+                id: item.id || "groc_" + Math.random().toString(36).slice(2, 7),
+                text: item.text || "",
+                qty: item.qty || "",
+                estPrice: Number(item.estPrice) || 0,
+                checked: Boolean(item.checked)
+              }))
+            : [],
+          groceryNotes
         };
       } catch (e) {
         return createDefaultState();
@@ -1345,27 +1458,27 @@
     }
 
     /* =========================================================
-       3. THEME & CUSTOMIZATION HANDLERS (Titles, Categories, Slots)
+       3. THEME & CUSTOMIZATION HANDLERS (Titles & Categories)
        ========================================================= */
     function applyTheme() {
-      if ( document.documentElement ) {
+      if (document.documentElement) {
         document.documentElement.setAttribute("data-theme", state.theme || "light");
       }
       const btn = document.getElementById("themeToggleBtn");
       if (btn) {
-        btn.textContent = state.theme === "dark" ? "☀️ Homey Light" : "🌙 Cozy Dark";
+        btn.textContent = state.theme === "dark" ? "☀️ Homey Light" : "🌙 Cozy Evening";
       }
     }
 
     function toggleTheme() {
       state.theme = state.theme === "dark" ? "light" : "dark";
       applyTheme();
-      saveState(state.theme === "light" ? "Switched to Homey Light theme" : "Switched to Cozy Dark theme");
+      saveState(state.theme === "light" ? "Switched to Homey Light theme" : "Switched to Cozy Evening theme");
     }
 
     function handleTitleChange(key, value) {
       state.titles[key] = value;
-      saveState("Title customized");
+      saveState("Heading saved");
     }
 
     function renderCustomTitles() {
@@ -1377,9 +1490,8 @@
         titleSpentBox: "spentBox",
         titleRemainingBox: "remainingBox",
         titleBudgetSection: "budgetSection",
-        titleExpenseSection: "expenseSection",
-        titleMealSection: "mealSection",
-        titleGrocerySection: "grocerySection"
+        titleGrocerySection: "grocerySection",
+        titleExpenseSection: "expenseSection"
       };
       Object.entries(map).forEach(([elId, key]) => {
         const el = document.getElementById(elId);
@@ -1426,48 +1538,11 @@
 
       state.categories = state.categories.filter((c) => c.id !== catId);
       const fallbackId = state.categories[0].id;
-      if (state.mealCategoryId === catId) {
-        state.mealCategoryId = fallbackId;
-      }
-      // Reassign any existing expenses from deleted category to first category
       state.expenses.forEach((e) => {
         if (e.category === catId) e.category = fallbackId;
       });
       saveState("Category removed");
       renderAll();
-    }
-
-    function setMealLinkedCategory(catId) {
-      state.mealCategoryId = catId;
-      saveState("Updated meal-linked category");
-      renderSummaryAndCategories(true);
-    }
-
-    function handleMealSlotLabelChange(slotId, newLabel) {
-      const slot = state.mealSlots.find((s) => s.id === slotId);
-      if (!slot) return;
-      slot.label = newLabel;
-      saveState("Meal slot renamed");
-      renderMealPlanner();
-    }
-
-    function renderMealSlotNamesBar() {
-      const bar = document.getElementById("mealSlotNamesBar");
-      if (!bar) return;
-      bar.innerHTML =
-        `<span>Meal Slots (click to rename):</span>` +
-        state.mealSlots
-          .map(
-            (slot) => `
-          <input
-            type="text"
-            class="slot-name-chip"
-            value="${escapeHtml(slot.label)}"
-            oninput="handleMealSlotLabelChange('${slot.id}', this.value)"
-          />
-        `
-          )
-          .join("");
     }
 
     function renderExpenseCategoryDropdown() {
@@ -1504,19 +1579,11 @@
         end = new Date(anchor.getFullYear(), anchor.getMonth() + 1, 0);
       }
 
-      const days = [];
-      const cursor = new Date(start);
-      while (cursor <= end) {
-        days.push(formatDateISO(cursor));
-        cursor.setDate(cursor.getDate() + 1);
-      }
-
       return {
         startISO: formatDateISO(start),
         endISO: formatDateISO(end),
         startDate: start,
-        endDate: end,
-        days
+        endDate: end
       };
     }
 
@@ -1666,99 +1733,35 @@
     }
 
     /* =========================================================
-       7. MEAL PLANNER & GROCERY LIST HANDLERS
+       7. GROCERY CHECKLIST & STICKY NOTES STUDIO HANDLERS
        ========================================================= */
-    function handleMealChange(dateISO, slotId, field, value) {
-      if (!state.meals[dateISO]) {
-        state.meals[dateISO] = {};
-      }
-      if (!state.meals[dateISO][slotId]) {
-        state.meals[dateISO][slotId] = { name: "", cost: 0 };
-      }
-
-      if (field === "name") {
-        state.meals[dateISO][slotId].name = value;
-        autoSyncSingleMealToGrocery(dateISO, slotId, value.trim());
-      } else if (field === "cost") {
-        state.meals[dateISO][slotId].cost = Math.max(0, parseFloat(value) || 0);
-      }
-
-      saveState("Meal plan saved");
-      renderSummaryAndCategories(false);
-      updateDayTotalDisplay(dateISO);
-      renderGroceryList();
-    }
-
-    function autoSyncSingleMealToGrocery(dateISO, slotId, mealName) {
-      const mealKey = `${dateISO}_${slotId}`;
-      const existingIdx = state.groceryList.findIndex((g) => g.sourceMealKey === mealKey);
-
-      if (!mealName) {
-        if (existingIdx !== -1 && !state.groceryList[existingIdx].checked) {
-          state.groceryList.splice(existingIdx, 1);
-        }
-        return;
-      }
-
-      const shortDate = parseDateISO(dateISO).toLocaleDateString("en-US", { month: "short", day: "numeric" });
-      const slotLabel = state.mealSlots.find((s) => s.id === slotId)?.label || slotId;
-      const formattedText = `${mealName} (${shortDate} ${slotLabel})`;
-
-      if (existingIdx !== -1) {
-        state.groceryList[existingIdx].text = formattedText;
-      } else {
-        state.groceryList.push({
-          id: "groc_" + Date.now() + "_" + Math.random().toString(36).slice(2, 6),
-          text: formattedText,
-          checked: false,
-          sourceMealKey: mealKey
-        });
-      }
-    }
-
-    function syncMealsToGroceryList() {
-      const bounds = getPeriodBounds(state.periodType, state.anchorDate);
-      let addedCount = 0;
-
-      bounds.days.forEach((dateISO) => {
-        const dayMeals = state.meals[dateISO] || {};
-        state.mealSlots.forEach((slot) => {
-          const entry = dayMeals[slot.id];
-          if (entry && entry.name && entry.name.trim()) {
-            const mealKey = `${dateISO}_${slot.id}`;
-            const exists = state.groceryList.some((g) => g.sourceMealKey === mealKey);
-            if (!exists) {
-              const shortDate = parseDateISO(dateISO).toLocaleDateString("en-US", { month: "short", day: "numeric" });
-              state.groceryList.push({
-                id: "groc_" + Date.now() + "_" + Math.random().toString(36).slice(2, 6),
-                text: `${entry.name.trim()} (${shortDate} ${slot.label})`,
-                checked: false,
-                sourceMealKey: mealKey
-              });
-              addedCount++;
-            }
-          }
-        });
-      });
-
-      saveState(addedCount > 0 ? `Synced ${addedCount} meal(s) to grocery list` : "Grocery list already up to date");
-      renderGroceryList();
-    }
-
     function addManualGroceryItem() {
-      const input = document.getElementById("newGroceryInput");
-      const text = input.value.trim();
+      const nameInput = document.getElementById("newGroceryName");
+      const qtyInput = document.getElementById("newGroceryQty");
+      const priceInput = document.getElementById("newGroceryPrice");
+
+      const text = nameInput.value.trim();
       if (!text) return;
+
+      const qty = qtyInput.value.trim();
+      const estPrice = Math.max(0, parseFloat(priceInput.value) || 0);
 
       state.groceryList.push({
         id: "groc_" + Date.now() + "_" + Math.random().toString(36).slice(2, 6),
         text,
-        checked: false,
-        sourceMealKey: null
+        qty,
+        estPrice,
+        checked: false
       });
-      input.value = "";
+
+      nameInput.value = "";
+      qtyInput.value = "";
+      priceInput.value = "";
+      nameInput.focus();
+
       saveState("Grocery item added");
       renderGroceryList();
+      renderSummaryAndCategories(false);
     }
 
     function toggleGroceryItem(id) {
@@ -1767,12 +1770,19 @@
       item.checked = !item.checked;
       saveState("Grocery item updated");
       renderGroceryList();
+      renderSummaryAndCategories(false);
     }
 
-    function editGroceryItemText(id, newText) {
+    function editGroceryField(id, field, value) {
       const item = state.groceryList.find((g) => g.id === id);
       if (!item) return;
-      item.text = newText;
+      if (field === "estPrice") {
+        item.estPrice = Math.max(0, parseFloat(value) || 0);
+        renderSummaryAndCategories(false);
+        updateCartPillOnly();
+      } else {
+        item[field] = value;
+      }
       saveState("Grocery item edited");
     }
 
@@ -1780,12 +1790,73 @@
       state.groceryList = state.groceryList.filter((g) => g.id !== id);
       saveState("Grocery item removed");
       renderGroceryList();
+      renderSummaryAndCategories(false);
     }
 
     function clearCheckedGroceries() {
       state.groceryList = state.groceryList.filter((g) => !g.checked);
       saveState("Cleared checked items");
       renderGroceryList();
+      renderSummaryAndCategories(false);
+    }
+
+    function logCheckedGroceriesAsExpenses() {
+      const checkedWithPrice = state.groceryList.filter((g) => g.checked && Number(g.estPrice) > 0);
+      if (checkedWithPrice.length === 0) {
+        alert("Check off at least one grocery item that has an estimated price (₱) to log it into your Expenses!");
+        return;
+      }
+
+      const defaultCatId = state.categories[0]?.id || "grocery";
+      const dateStr = document.getElementById("expenseDate")?.value || getTodayISO();
+
+      checkedWithPrice.forEach((item) => {
+        const label = item.qty ? `${item.text} (${item.qty})` : item.text;
+        state.expenses.push({
+          id: "exp_" + Date.now() + "_" + Math.random().toString(36).slice(2, 6),
+          date: dateStr,
+          category: defaultCatId,
+          name: label,
+          amount: Number(item.estPrice)
+        });
+      });
+
+      // Remove those logged items from checklist
+      const loggedIds = new Set(checkedWithPrice.map((i) => i.id));
+      state.groceryList = state.groceryList.filter((g) => !loggedIds.has(g.id));
+
+      saveState(`Logged ${checkedWithPrice.length} grocery item(s) to Expenses`);
+      renderAll();
+    }
+
+    // Sticky Notes Handlers
+    function addGroceryNote() {
+      const colors = ["cream", "peach", "sage", "sky"];
+      const nextColor = colors[state.groceryNotes.length % colors.length];
+      state.groceryNotes.unshift({
+        id: "note_" + Date.now() + "_" + Math.random().toString(36).slice(2, 5),
+        title: "📌 New Kitchen Note",
+        body: "",
+        color: nextColor
+      });
+      saveState("Added note card");
+      renderNotesBoard();
+    }
+
+    function updateGroceryNote(id, field, value) {
+      const note = state.groceryNotes.find((n) => n.id === id);
+      if (!note) return;
+      note[field] = value;
+      saveState("Note saved");
+      if (field === "color") {
+        renderNotesBoard();
+      }
+    }
+
+    function deleteGroceryNote(id) {
+      state.groceryNotes = state.groceryNotes.filter((n) => n.id !== id);
+      saveState("Note deleted");
+      renderNotesBoard();
     }
 
     /* =========================================================
@@ -1797,7 +1868,7 @@
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `meal-budget-planner-${getTodayISO()}.json`;
+      a.download = `home-budget-planner-${getTodayISO()}.json`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -1832,7 +1903,7 @@
 
     function resetAllData() {
       const confirmed = window.confirm(
-        "Are you sure you want to reset all budgets, custom categories, expenses, meal plans, and grocery items? This cannot be undone."
+        "Are you sure you want to reset all budgets, custom categories, expenses, grocery items, and notes? This cannot be undone."
       );
       if (!confirmed) return;
       localStorage.removeItem(STORAGE_KEY);
@@ -1867,13 +1938,13 @@
         }
       });
 
-      let plannedMealCost = 0;
-      bounds.days.forEach((dayISO) => {
-        const dayObj = state.meals[dayISO];
-        if (dayObj) {
-          state.mealSlots.forEach((slot) => {
-            plannedMealCost += Number(dayObj[slot.id]?.cost) || 0;
-          });
+      let uncheckedCartTotal = 0;
+      let fullCartTotal = 0;
+      state.groceryList.forEach((item) => {
+        const p = Number(item.estPrice) || 0;
+        fullCartTotal += p;
+        if (!item.checked) {
+          uncheckedCartTotal += p;
         }
       });
 
@@ -1889,7 +1960,8 @@
         periodBudget,
         periodExpenses,
         spentByCategory,
-        plannedMealCost,
+        uncheckedCartTotal,
+        fullCartTotal,
         totalSpent,
         totalAssigned
       };
@@ -1897,7 +1969,7 @@
 
     function renderSummaryAndCategories(rebuildCategoryInputs = true) {
       const calc = getPeriodCalculations();
-      const { periodBudget, spentByCategory, plannedMealCost, totalSpent, totalAssigned } = calc;
+      const { periodBudget, spentByCategory, uncheckedCartTotal, totalSpent, totalAssigned } = calc;
 
       const capPeriod = state.periodType.charAt(0).toUpperCase() + state.periodType.slice(1);
       document.getElementById("summaryPeriodName").textContent = capPeriod;
@@ -1915,7 +1987,7 @@
 
       // Summary Boxes
       const totalRemaining = periodBudget.allowance - totalSpent;
-      const totalProjected = totalSpent + plannedMealCost;
+      const afterCartRemaining = totalRemaining - uncheckedCartTotal;
 
       document.getElementById("sumAllowance").textContent = formatPHP(periodBudget.allowance);
       document.getElementById("sumUnassignedSub").textContent =
@@ -1926,7 +1998,7 @@
         unassigned < -0.0001 ? "stat-sub text-red" : "stat-sub";
 
       document.getElementById("sumSpent").textContent = formatPHP(totalSpent);
-      document.getElementById("sumPlannedSub").textContent = `Planned Meals: ${formatPHP(plannedMealCost)}`;
+      document.getElementById("sumCartSub").textContent = `Unchecked Grocery Cart: ${formatPHP(uncheckedCartTotal)}`;
 
       const sumRemainingEl = document.getElementById("sumRemaining");
       const sumRemainingBox = document.getElementById("sumRemainingBox");
@@ -1944,9 +2016,8 @@
       }
 
       const projectedSub = document.getElementById("sumProjectedSub");
-      projectedSub.textContent = `Projected (Spent + Planned): ${formatPHP(totalProjected)}`;
-      projectedSub.className =
-        totalProjected > periodBudget.allowance + 0.0001 ? "stat-sub text-red" : "stat-sub";
+      projectedSub.textContent = `Remaining After Cart: ${formatPHP(afterCartRemaining)}`;
+      projectedSub.className = afterCartRemaining < -0.0001 ? "stat-sub text-red" : "stat-sub";
 
       // Top Warning Banner for Overflows
       const warnings = [];
@@ -1957,18 +2028,6 @@
           warnings.push(`${escapeHtml(cat.name || "Category")} is over budget by ${formatPHP(s - b)} (Budget: ${formatPHP(b)}, Spent: ${formatPHP(s)})`);
         }
       });
-
-      const mealCat = state.categories.find((c) => c.id === state.mealCategoryId) || state.categories[0];
-      if (mealCat) {
-        const mealCatBudget = Number(periodBudget.categories[mealCat.id]) || 0;
-        const mealCatSpent = spentByCategory[mealCat.id] || 0;
-        const mealCatProjected = mealCatSpent + plannedMealCost;
-        if (mealCatSpent <= mealCatBudget + 0.0001 && mealCatProjected > mealCatBudget + 0.0001) {
-          warnings.push(
-            `${escapeHtml(mealCat.name)} projected spending (Spent + Planned Meals) exceeds budget by ${formatPHP(mealCatProjected - mealCatBudget)}`
-          );
-        }
-      }
 
       if (totalSpent > periodBudget.allowance + 0.0001) {
         warnings.push(
@@ -1990,7 +2049,6 @@
       const container = document.getElementById("categoriesContainer");
       if (rebuildCategoryInputs || container.children.length === 0) {
         container.innerHTML = state.categories.map((cat) => {
-          const isMealCat = cat.id === state.mealCategoryId;
           const catBudgetVal = Number(periodBudget.categories[cat.id]) || 0;
           return `
             <div class="category-card" id="catCard_${cat.id}">
@@ -2011,25 +2069,17 @@
                 </div>
               </div>
 
-              <div style="display: flex; justify-content: space-between; align-items: center;">
-                <label for="catBudgetInput_${cat.id}" style="margin-bottom: 0;">Category Budget (₱)</label>
-                <button
-                  type="button"
-                  class="meal-link-btn ${isMealCat ? "active" : ""}"
-                  title="Link Planned Meal costs to this category"
-                  onclick="setMealLinkedCategory('${cat.id}')"
-                >
-                  ${isMealCat ? "🍲 Meal Plan Linked" : "Link Meal Plan"}
-                </button>
+              <div>
+                <label for="catBudgetInput_${cat.id}">Category Budget (₱)</label>
+                <input
+                  id="catBudgetInput_${cat.id}"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value="${catBudgetVal}"
+                  oninput="handleCategoryBudgetChange('${cat.id}', this.value)"
+                />
               </div>
-              <input
-                id="catBudgetInput_${cat.id}"
-                type="number"
-                min="0"
-                step="0.01"
-                value="${catBudgetVal}"
-                oninput="handleCategoryBudgetChange('${cat.id}', this.value)"
-              />
 
               <div class="cat-metrics">
                 <div class="cat-metric-row">
@@ -2046,28 +2096,11 @@
                 </div>
               </div>
 
-              ${isMealCat ? `
-                <div class="planned-box">
-                  <div class="planned-row">
-                    <span>Planned (Meal Plan):</span>
-                    <span id="groceryPlannedVal" class="text-planned">₱0.00</span>
-                  </div>
-                  <div class="planned-row">
-                    <span>Projected (Spent + Planned):</span>
-                    <span id="groceryProjectedVal">₱0.00</span>
-                  </div>
-                  <div class="planned-row">
-                    <span>Projected Remaining:</span>
-                    <span id="groceryProjectedRemVal">₱0.00</span>
-                  </div>
-                </div>
-              ` : ""}
-
               <div>
                 <div class="progress-track">
                   <div id="catProgressFill_${cat.id}" class="progress-fill progress-green" style="width: 0%;"></div>
                 </div>
-                <div class="progress-caption" style="margin-top: 0.3rem;">
+                <div class="progress-caption">
                   <span id="catPctLabel_${cat.id}">0% used</span>
                   <span id="catStatusText_${cat.id}">Within budget</span>
                 </div>
@@ -2123,32 +2156,132 @@
         }
 
         pctLabelEl.textContent = budget > 0 ? `${Math.round(rawPct)}% of budget` : (spent > 0 ? "Over budget" : "0% of budget");
-
-        if (cat.id === state.mealCategoryId) {
-          const projected = spent + plannedMealCost;
-          const projectedRem = budget - projected;
-          const isProjectedOver = projected > budget + 0.0001;
-
-          const plannedEl = document.getElementById("groceryPlannedVal");
-          const projValEl = document.getElementById("groceryProjectedVal");
-          const projRemEl = document.getElementById("groceryProjectedRemVal");
-
-          if (plannedEl && projValEl && projRemEl) {
-            plannedEl.textContent = formatPHP(plannedMealCost);
-            projValEl.textContent = formatPHP(projected);
-            projValEl.className = isProjectedOver ? "text-red" : "";
-
-            projRemEl.textContent = formatPHP(projectedRem);
-            projRemEl.className = isProjectedOver ? "text-red" : "text-green";
-
-            if (!isOver && isProjectedOver) {
-              badgeEl.innerHTML = `<span class="badge-projected-over">Projected Over</span>`;
-            }
-          }
-        }
       });
+    }
 
-      document.getElementById("mealPlannerSummary").textContent = `Planned: ${formatPHP(plannedMealCost)}`;
+    function updateCartPillOnly() {
+      const pill = document.getElementById("groceryCartTotalPill");
+      if (!pill) return;
+      let total = 0;
+      state.groceryList.forEach((item) => {
+        if (!item.checked) total += Number(item.estPrice) || 0;
+      });
+      pill.textContent = `Est. Unchecked Cart: ${formatPHP(total)}`;
+    }
+
+    function renderGroceryList() {
+      const container = document.getElementById("groceryListContainer");
+      updateCartPillOnly();
+
+      if (state.groceryList.length === 0) {
+        container.innerHTML = `<div class="empty-state">Your shopping checklist is empty. Add items, quantities &amp; estimated prices above!</div>`;
+        return;
+      }
+
+      container.innerHTML = state.groceryList
+        .map((item) => {
+          const priceVal = item.estPrice > 0 ? item.estPrice : "";
+          return `
+            <div class="grocery-item ${item.checked ? "checked" : ""}">
+              <input
+                type="checkbox"
+                class="grocery-checkbox"
+                ${item.checked ? "checked" : ""}
+                onchange="toggleGroceryItem('${item.id}')"
+              />
+              <input
+                type="text"
+                class="grocery-name-input"
+                placeholder="Item name"
+                value="${escapeHtml(item.text)}"
+                oninput="editGroceryField('${item.id}', 'text', this.value)"
+              />
+              <input
+                type="text"
+                class="grocery-qty-input"
+                placeholder="Qty / Note"
+                value="${escapeHtml(item.qty || "")}"
+                oninput="editGroceryField('${item.id}', 'qty', this.value)"
+              />
+              <input
+                type="number"
+                min="0"
+                step="0.01"
+                class="grocery-price-input"
+                placeholder="₱ Est."
+                value="${priceVal}"
+                oninput="editGroceryField('${item.id}', 'estPrice', this.value)"
+              />
+              <button type="button" class="btn btn-sm btn-danger" title="Remove item" onclick="deleteGroceryItem('${item.id}')">&times;</button>
+            </div>
+          `;
+        })
+        .join("");
+    }
+
+    function renderNotesBoard() {
+      const container = document.getElementById("notesBoardContainer");
+      if (!container) return;
+
+      if (state.groceryNotes.length === 0) {
+        container.innerHTML = `<div class="empty-state">No kitchen or market notes yet. Click "+ New Note Card" to jot down reminders!</div>`;
+        return;
+      }
+
+      const colorOptions = [
+        { id: "cream", bg: "#fff3b0", label: "Warm Cream" },
+        { id: "peach", bg: "#ffd8be", label: "Soft Peach" },
+        { id: "sage",  bg: "#d8f3dc", label: "Sage Leaf" },
+        { id: "sky",   bg: "#cdeae5", label: "Morning Sky" }
+      ];
+
+      container.innerHTML = state.groceryNotes
+        .map((note) => {
+          const colorClass = `note-color-${note.color || "cream"}`;
+          const dotsHtml = colorOptions
+            .map(
+              (c) => `
+              <button
+                type="button"
+                class="color-dot"
+                style="background:${c.bg};"
+                title="Change note color to ${c.label}"
+                onclick="updateGroceryNote('${note.id}', 'color', '${c.id}')"
+              ></button>
+            `
+            )
+            .join("");
+
+          return `
+            <div class="note-card ${colorClass}">
+              <div class="note-card-header">
+                <input
+                  type="text"
+                  class="note-title-input"
+                  value="${escapeHtml(note.title || "")}"
+                  placeholder="Note title..."
+                  oninput="updateGroceryNote('${note.id}', 'title', this.value)"
+                />
+                <div class="note-color-dots">
+                  ${dotsHtml}
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-danger"
+                    style="padding: 0.1rem 0.45rem; margin-left: 0.2rem;"
+                    title="Delete note"
+                    onclick="deleteGroceryNote('${note.id}')"
+                  >&times;</button>
+                </div>
+              </div>
+              <textarea
+                class="note-body-textarea"
+                placeholder="Write market reminders, meal ideas, store comparisons, or pantry notes here..."
+                oninput="updateGroceryNote('${note.id}', 'body', this.value)"
+              >${escapeHtml(note.body || "")}</textarea>
+            </div>
+          `;
+        })
+        .join("");
     }
 
     function renderExpenses() {
@@ -2159,7 +2292,7 @@
       countEl.textContent = `${periodExpenses.length} ${periodExpenses.length === 1 ? "item" : "items"}`;
 
       if (periodExpenses.length === 0) {
-        listEl.innerHTML = `<div class="empty-state">No expenses recorded for this period yet. Add one above!</div>`;
+        listEl.innerHTML = `<div class="empty-state">No expenses recorded for this period yet. Add one above or log checked items from your grocery list!</div>`;
         return;
       }
 
@@ -2191,105 +2324,6 @@
         .join("");
     }
 
-    function renderMealPlanner() {
-      const bounds = getPeriodBounds(state.periodType, state.anchorDate);
-      const gridEl = document.getElementById("mealGrid");
-      const todayISO = getTodayISO();
-
-      gridEl.innerHTML = bounds.days
-        .map((dateISO) => {
-          const d = parseDateISO(dateISO);
-          const dayLabel = d.toLocaleDateString("en-US", {
-            weekday: "short",
-            month: "short",
-            day: "numeric"
-          });
-          const dayMeals = state.meals[dateISO] || {};
-          let dayTotal = 0;
-          state.mealSlots.forEach((s) => {
-            dayTotal += Number(dayMeals[s.id]?.cost) || 0;
-          });
-
-          const slotsHtml = state.mealSlots.map((slot) => {
-            const entry = dayMeals[slot.id] || { name: "", cost: "" };
-            const costVal = entry.cost > 0 ? entry.cost : "";
-            return `
-              <div class="meal-slot">
-                <span class="meal-slot-label">${escapeHtml(slot.label)}</span>
-                <div class="meal-inputs">
-                  <input
-                    type="text"
-                    placeholder="Meal name..."
-                    value="${escapeHtml(entry.name || "")}"
-                    oninput="handleMealChange('${dateISO}', '${slot.id}', 'name', this.value)"
-                  />
-                  <input
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    placeholder="₱ Cost"
-                    value="${costVal}"
-                    oninput="handleMealChange('${dateISO}', '${slot.id}', 'cost', this.value)"
-                  />
-                </div>
-              </div>
-            `;
-          }).join("");
-
-          return `
-            <div class="day-card ${dateISO === todayISO ? "is-today" : ""}">
-              <div class="day-header">
-                <span>${dayLabel}</span>
-                <span class="day-total" id="dayTotal_${dateISO}">${formatPHP(dayTotal)}</span>
-              </div>
-              ${slotsHtml}
-            </div>
-          `;
-        })
-        .join("");
-    }
-
-    function updateDayTotalDisplay(dateISO) {
-      const el = document.getElementById(`dayTotal_${dateISO}`);
-      if (!el) return;
-      const dayMeals = state.meals[dateISO] || {};
-      let dayTotal = 0;
-      state.mealSlots.forEach((s) => {
-        dayTotal += Number(dayMeals[s.id]?.cost) || 0;
-      });
-      el.textContent = formatPHP(dayTotal);
-    }
-
-    function renderGroceryList() {
-      const container = document.getElementById("groceryListContainer");
-      if (state.groceryList.length === 0) {
-        container.innerHTML = `<div class="empty-state">Your grocery list is empty. Type meals in the planner above or add items directly!</div>`;
-        return;
-      }
-
-      container.innerHTML = state.groceryList
-        .map(
-          (item) => `
-          <div class="grocery-item ${item.checked ? "checked" : ""}">
-            <input
-              type="checkbox"
-              class="grocery-checkbox"
-              ${item.checked ? "checked" : ""}
-              onchange="toggleGroceryItem('${item.id}')"
-            />
-            <input
-              type="text"
-              class="grocery-text-input"
-              value="${escapeHtml(item.text)}"
-              oninput="editGroceryItemText('${item.id}', this.value)"
-            />
-            <button type="button" class="btn btn-sm btn-danger" onclick="deleteGroceryItem('${item.id}')">&times;</button>
-          </div>
-        `
-        )
-        .join("");
-    }
-
     function escapeHtml(str) {
       return String(str)
         .replace(/&/g, "&amp;")
@@ -2317,10 +2351,9 @@
       renderHeaderPeriod();
       renderExpenseCategoryDropdown();
       renderSummaryAndCategories(true);
-      renderExpenses();
-      renderMealSlotNamesBar();
-      renderMealPlanner();
       renderGroceryList();
+      renderNotesBoard();
+      renderExpenses();
     }
 
     // Initialize App on Load
